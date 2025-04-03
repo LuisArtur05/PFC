@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput,TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-
 import styles from '../styles/CreateAccountStyle';
 
 export default function CreateAccount({ navigation })  {
@@ -28,7 +27,7 @@ export default function CreateAccount({ navigation })  {
       <Text style={styles.subTitle}>Confirm Password:</Text>
       <TextInput style={styles.textInput} secureTextEntry={true} ></TextInput>
       <Text>{"\n"}</Text>
-      <ButtonGradient></ButtonGradient>
+      <Create_user_btn navigation={navigation}></Create_user_btn>
       
       <StatusBar style="auto" />
 
@@ -36,9 +35,9 @@ export default function CreateAccount({ navigation })  {
   );
 }
 
-function ButtonGradient() {
+function Create_user_btn({navigation}) {
   return (
-    <TouchableOpacity style={styles.ContainerButton}>
+    <TouchableOpacity style={styles.ContainerButton} onPress={() => navigation.navigate('Sign')}>
       <LinearGradient
         colors={['#FFA500', '#FF4500']} // Degradado de rojo a naranja
         start={{ x: 1, y: 0 }}
