@@ -1,13 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
+import {  Text, View, TextInput,TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { NavigationContainer } from '@react-navigation/native';
-
-import CreateAccount from './CreateAccount';
 import styles from '../styles/SignStyle';
+
 export default function Sign({ navigation })  {
-  
   return (
 
     <View style={styles.container}>
@@ -17,15 +14,15 @@ export default function Sign({ navigation })  {
       <TextInput style={styles.textInput} placeholder='password'
       secureTextEntry={true}></TextInput>
       
-      <ButtonGradient></ButtonGradient>
-      <ButtonGradient2 navigation={navigation}></ButtonGradient2>
+      <Sign_btn></Sign_btn>
+      <Create_user_btn navigation={navigation}></Create_user_btn>
       <StatusBar style="auto" />
 
     </View>
   );
 }
 
-function ButtonGradient() {
+function Sign_btn() {
   return (
     <TouchableOpacity style={styles.ContainerButton}>
       <LinearGradient
@@ -39,7 +36,7 @@ function ButtonGradient() {
     </TouchableOpacity>
   );
 }
-function ButtonGradient2({ navigation }) {
+function Create_user_btn({ navigation }) {
  
   return (
     <TouchableOpacity style={styles.ContainerButton} onPress={() => navigation.navigate('CreateAccount')} >
@@ -52,14 +49,5 @@ function ButtonGradient2({ navigation }) {
         <Text style={styles.textButton}>Create Account</Text>
       </LinearGradient>
     </TouchableOpacity>
-  );
-}
-function Navigator() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator >
-        <Stack.Screen   name="CreateAccount"component={CreateAccount} />
-      </Stack.Navigator>
-    </NavigationContainer>
   );
 }
