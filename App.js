@@ -9,11 +9,11 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={Sign}
+      <Stack.Navigator initialRouteName='Sign'>
+        <Stack.Screen name='Sign' component={Sign}
           options={{ headerShown: false }}//Oculta el encabezado
         />
-        <Stack.Screen name="CreateAccount" component={CreateAccount}
+        <Stack.Screen name='CreateAccount' component={CreateAccount}
           options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
