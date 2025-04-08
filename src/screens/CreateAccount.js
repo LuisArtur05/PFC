@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Text, View, TextInput,TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import styles from '../styles/CreateAccountStyle';
+import styles from '../../styles/CreateAccountStyle';
 
 export default function CreateAccount({ navigation })  {
   
