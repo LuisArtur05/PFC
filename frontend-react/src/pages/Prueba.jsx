@@ -1,11 +1,11 @@
-// src/pages/Dashboard.jsx
 import React from "react";
 import AddButton from "../components/AddButton";
 import FoodCard from '../components/FoodCard';
 import SideBar from "../components/SideBar";
 import BurguerMenu from "../components/BurguerMenu";
 
-const Dashboard = () => {
+const Prueba = () => {
+
     {/*Aqui un JSON simulando los alimentos */ }
     const alimentos = [
         {
@@ -85,6 +85,6 @@ const Dashboard = () => {
             </div>
         </div>
     );
-}
+};
 
-export default Dashboard;
+export default Prueba;
