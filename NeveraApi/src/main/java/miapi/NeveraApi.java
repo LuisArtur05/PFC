@@ -1,13 +1,15 @@
-package com.COOLED.backend_spring;
+
+package miapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackendSpringApplication {
+public class NeveraApi {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendSpringApplication.class, args);
+		SpringApplication.run(NeveraApi.class, args);
+
 	}
 
 }
