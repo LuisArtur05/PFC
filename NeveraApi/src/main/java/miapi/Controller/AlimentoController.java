@@ -1,5 +1,7 @@
 package miapi.Controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,57 +16,72 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
-import miapi.Alimento;
 import miapi.DTO.AlimentoDTO;
 import miapi.Service.AlimentoService;
+import miapi.Tables.Alimento;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/alimento")
 @RequiredArgsConstructor
 @Tag(name = "Alimentos", description = "Gestion de alimentos")
 public class AlimentoController {
-    private final AlimentoService alimentoService;
+        private final AlimentoService alimentoService;
 
-    @PostMapping("/crearAlimento")
-    @Operation(summary = "Crear alimento", description = "Crea un nuevo alimento en el sistema")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Alimento creado exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Solicitud incorrecta"),
+        @PostMapping("/crearAlimento")
+        @Operation(summary = "Crear alimento", description = "Crea un nuevo alimento en el sistema")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "201", description = "Alimento creado exitosamente"),
+                        @ApiResponse(responseCode = "400", description = "Solicitud incorrecta"),
 
-    })
+        })
 
-    public ResponseEntity<Alimento> crearAlimento(
+        public ResponseEntity<Alimento> crearAlimento(
 
-            @RequestBody(description = "Datos del alimento a crear", content = @Content(mediaType = "application/json", schema = @Schema(example = """
-                    {
-                      "usuario_id": 1,
-                      "categoria_id":5,
-                      "nombre": "leche",
-                      "fecha_caducidad": "2025-04-11",
-                      "cantidad":2,
-                      "ubicacion":"Frigorifico"
+                        @RequestBody(description = "Datos del alimento a crear", content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                                        {
+                                          "usuario_id": 1,
+                                          "categoria_id":5,
+                                          "nombre": "leche",
+                                          "fecha_caducidad": "2025-04-11",
+                                          "cantidad":2,
+                                          "ubicacion":"Frigorifico"
 
 
-                    }
-                    """))) @org.springframework.web.bind.annotation.RequestBody AlimentoDTO alimentoDTO) {
+                                        }
+                                        """))) @org.springframework.web.bind.annotation.RequestBody AlimentoDTO alimentoDTO) {
 
-        Alimento alimento = alimentoService.createAlimento(alimentoDTO);
-        return new ResponseEntity<>(alimento, HttpStatus.CREATED);
-    }
+                Alimento alimento = alimentoService.createAlimento(alimentoDTO);
+                return new ResponseEntity<>(alimento, HttpStatus.CREATED);
+        }
 
-    @GetMapping("/BuscarAlimento/{id}")
-    @Operation(summary = "Buscar alimento por ID", description = "Devuelve los datos simples del alimento")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Alimento encontrado"),
-            @ApiResponse(responseCode = "404", description = "Alimento no encontrado"),
-    })
-    public ResponseEntity<AlimentoDTO> buscarAlimentoPorId(@PathVariable Integer id) {
-        AlimentoDTO dto = alimentoService.buscarAlimentoPorId(id);
-        return ResponseEntity.ok(dto);
-    }
+        @GetMapping("/BuscarAlimento/{id}")
+        @Operation(summary = "Buscar alimento por ID", description = "Devuelve los datos simples del alimento")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Alimento encontrado"),
+                        @ApiResponse(responseCode = "404", description = "Alimento no encontrado"),
+        })
+        public ResponseEntity<AlimentoDTO> buscarAlimentoPorId(@PathVariable Integer id) {
+                AlimentoDTO dto = alimentoService.buscarAlimentoPorId(id);
+                return ResponseEntity.ok(dto);
+        }
+
+        @GetMapping("/BuscarAlimentosPorUsuario/{usuarioId}")
+        @Operation(summary = "Buscar alimentos por ID de usuario", description = "Devuelve todos los alimentos de un usuario")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Alimentos encontrados"),
+                        @ApiResponse(responseCode = "404", description = "No se encontraron alimentos o usuario no existe"),
+        })
+        public ResponseEntity<List<AlimentoDTO>> obtenerAlimentosPorUsuario(@PathVariable Integer usuarioId) {
+                List<AlimentoDTO> alimentos = alimentoService.obtenerAlimentosPorUsuario(usuarioId);
+
+                if (alimentos.isEmpty()) {
+                        return ResponseEntity.notFound().build(); // Devuelve un 404 si no se encuentran alimentos
+                }
+
+                return ResponseEntity.ok(alimentos); // Devuelve la lista de alimentos con un 200 OK
+        }
 
 }

@@ -1,4 +1,4 @@
-package miapi;
+package miapi.Tables;
 
 import java.util.List;
 

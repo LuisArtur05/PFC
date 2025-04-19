@@ -1,11 +1,15 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import Dashboard from "./pages/Dashboard";
-import Prueba from "./pages/Prueba"
-import "bootstrap/dist/css/bootstrap.min.css"; // Importación de Bootstrap
-import 'bootstrap/dist/js/bootstrap.bundle.min';
+import Prueba from "./pages/Prueba";
+import CreateAccount from "./pages/CreateAccount";
 import Login from "./pages/Login";
-import AlimentoView from "./pages/AlimentoView";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 
 function App() {
   return (
