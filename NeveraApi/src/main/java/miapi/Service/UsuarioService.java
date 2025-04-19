@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import miapi.Usuario;
 import miapi.DAO.UsuarioDAO;
+import miapi.Tables.Usuario;
 
 @Service
 @RequiredArgsConstructor
@@ -22,4 +22,5 @@ public class UsuarioService {
                 .map(Usuario::getId_usuario)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ese email y contraseña"));
     }
+    
 }
