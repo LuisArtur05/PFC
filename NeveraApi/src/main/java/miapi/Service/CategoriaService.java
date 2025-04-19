@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import miapi.Categoria;
 import miapi.DAO.CategoriaDAO;
+import miapi.Tables.Categoria;
 
 @Service
 @RequiredArgsConstructor

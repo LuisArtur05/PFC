@@ -23,11 +23,11 @@ a:hover {
 }
 
 body {
-  margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: center; /* Centrado horizontal */
+  align-items: center;     /* Centrado vertical */
+  height: 100vh;           /* Asegura que el body ocupe toda la altura de la ventana */
+  margin: 0;               /* Elimina márgenes por defecto */
 }
 
 h1 {
