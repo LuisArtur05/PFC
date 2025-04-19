@@ -14,13 +14,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import miapi.Usuario;
 import miapi.Service.UsuarioService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import miapi.Tables.Usuario;
+
 
 @RestController
-@RequestMapping("/usario")
+@RequestMapping("/usuario")
 @RequiredArgsConstructor
 @Tag(name = "usuarios", description = "Usuarios GETTERS and POST")
 public class UsuarioController {

@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import miapi.Categoria;
 import miapi.Service.CategoriaService;
+import miapi.Tables.Categoria;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

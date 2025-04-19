@@ -1,4 +1,4 @@
-package miapi;
+package miapi.Config;
 
 public enum Ubicacion {
     Frigorifico,
