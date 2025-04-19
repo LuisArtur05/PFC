@@ -1,7 +1,6 @@
 import { FaSnowflake, FaAppleAlt, FaIceCream } from "react-icons/fa";
 import { RiFridgeFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
-import AddButton from "./AddButton";
 
 const SideBar = () => {
     const handleAddFood = () => {

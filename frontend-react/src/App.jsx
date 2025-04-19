@@ -5,12 +5,13 @@ import Prueba from "./pages/Prueba"
 import "bootstrap/dist/css/bootstrap.min.css"; // Importación de Bootstrap
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import Login from "./pages/Login";
+import AlimentoView from "./pages/AlimentoView";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="" element={<Login />} />
       </Routes>
     </Router>
   );
