@@ -1,29 +1,36 @@
 // src/pages/Dashboard.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AddButton from "../components/AddButton";
 import FoodCard from '../components/FoodCard';
 import SideBar from "../components/SideBar";
 import BurguerMenu from "../components/BurguerMenu";
+import { getAlimentosPorUsuario } from "../services/alimentosService";
 
 const Dashboard = () => {
-    {/*Aqui un JSON simulando los alimentos */ }
-    const alimentos = [
-        {
-            nombre: "Yogur Natural",
-            descripcion: "Caduca pronto",
-            fecha: "Hoy · 23 min"
-        },
-        {
-            nombre: "Manzanas",
-            descripcion: "Manzana roja",
-            fecha: "Mañana · 14:00"
-        },
-        {
-            nombre: "Pechuga de Pollo",
-            descripcion: "A punto de caducar",
-            fecha: "Hoy · 18:30"
-        }
-    ];
+
+    {/*Recogemos los alimentos del usuario con en un array */ }
+    const [alimentos, setAlimentos] = useState([]);
+
+    useEffect(() => {
+        const fetchAlimentos = async () => {
+            const usuarioId = localStorage.getItem("usuarioId");
+            if (!usuarioId) return;
+
+            try {
+                const data = await getAlimentosPorUsuario(usuarioId);
+                console.log("Datos recibidos:", data);
+                setAlimentos(data);
+            } catch (error) {
+                console.error("Error obtenido al obtener Alimentos:", error)
+            }
+        };
+
+        fetchAlimentos();
+    }, [])
+
+    const alimentosNevera = alimentos.filter(a => a.ubicacion === "Frigorifico");
+    const alimentosCongelador = alimentos.filter(a => a.ubicacion === "Congelador")
+    const alimentosDespensa = alimentos.filter(a => a.ubicacion === "Despensa")
 
     return (
         <div className="container-fluid vh-100">
@@ -42,34 +49,34 @@ const Dashboard = () => {
                     <div className="row flex-grow-1  bg-white">
                         <div className="col-sm p-3 bg-white">
                             <h2 className="text-center" >Nevera</h2>
-                            {alimentos.map((item, index) => (
+                            {alimentosNevera.map((item, index) => (
                                 <FoodCard
-                                    key={`nevera-${index}`}
+                                    key={`nevera-${item.id_alimento}`}
                                     nombre={item.nombre}
-                                    descripcion={item.descripcion}
-                                    fecha={item.fecha}
+                                    descripcion={`Cantidad: ${item.cantidad}`}
+                                    fecha={new Date(item.fecha_caducidad).toLocaleDateString()}
                                 />
                             ))}
                         </div>
                         <div className="col-sm p-3 bg-white">
                             <h2 className="text-center" >Congelador</h2>
-                            {alimentos.map((item, index) => (
+                            {alimentosCongelador.map((item, index) => (
                                 <FoodCard
-                                    key={`congelador-${index}`}
+                                    key={`nevera-${item.id_alimento}`}
                                     nombre={item.nombre}
-                                    descripcion={item.descripcion}
-                                    fecha={item.fecha}
+                                    descripcion={`Cantidad: ${item.cantidad}`}
+                                    fecha={new Date(item.fecha_caducidad).toLocaleDateString()}
                                 />
                             ))}
                         </div>
                         <div className="col-sm p-3 bg-white">
                             <h2 className="text-center" >Despensa</h2>
-                            {alimentos.map((item, index) => (
+                            {alimentosDespensa.map((item, index) => (
                                 <FoodCard
-                                    key={`despensa-${index}`}
+                                    key={`nevera-${item.id_alimento}`}
                                     nombre={item.nombre}
-                                    descripcion={item.descripcion}
-                                    fecha={item.fecha}
+                                    descripcion={`Cantidad: ${item.cantidad}`}
+                                    fecha={new Date(item.fecha_caducidad).toLocaleDateString()}
                                 />
                             ))}
                         </div>
@@ -85,6 +92,6 @@ const Dashboard = () => {
             </div>
         </div>
     );
-}
+};
 
 export default Dashboard;
