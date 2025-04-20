@@ -1,4 +1,4 @@
-import api from "axios";
+import api from "./axios";
 
 export const getAlimentoPorId = async () => {
     const response = await api.get("/alimento/BuscarAlimento/${id}");
@@ -10,3 +10,7 @@ export const crearAlimento = async (alimento) => {
     return response.data;
 };
 
+export const getAlimentosPorUsuario = async (usuarioId) => {
+    const response = await api.get(`/alimento/BuscarAlimentosPorUsuario/${usuarioId}`);
+    return response.data;
+};
