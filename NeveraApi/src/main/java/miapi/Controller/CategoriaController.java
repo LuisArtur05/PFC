@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @RestController
 @RequestMapping("/categoria")
 @RequiredArgsConstructor
-@Tag(name = "categoria_alimentos", description = "Registro de categorias")
+@Tag(name = "Categoria", description = "Registro de categorias")
 public class CategoriaController {
     private final CategoriaService categoriaService;
 
