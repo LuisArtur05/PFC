@@ -1,20 +1,25 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-const ResetPassword = () => {
-  const { token } = useParams();
-  const [password, setPassword] = useState("");
-  const [status, setStatus] = useState("");
+export default function ResetPassword() {
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+
+  const [nuevaPassword, setNuevaPassword] = useState("");
+  const [mensaje, setMensaje] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await axios.post(`http://localhost:8080/usuario/reset-password/${token}`, { password });
-      setStatus("Contraseña actualizada con éxito. Ya puedes iniciar sesión.");
+      const res = await fetch(`http://localhost:8080/usuario/restablecer-password?token=${token}&nuevaPassword=${nuevaPassword}`, {
+        method: "POST",
+      });
+
+      const text = await res.text();
+      setMensaje(text);
     } catch (error) {
-      setStatus("Error al actualizar la contraseña.");
+      setMensaje("Error al actualizar la contraseña.");
     }
   };
 
@@ -25,24 +30,22 @@ const ResetPassword = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="password" className="form-label">Nueva contraseña</label>
+            <label htmlFor="nuevaPassword" className="form-label">Nueva contraseña</label>
             <input
               type="password"
               className="form-control"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="nuevaPassword"
+              value={nuevaPassword}
+              onChange={(e) => setNuevaPassword(e.target.value)}
               required
             />
           </div>
-            
+
           <button type="submit" className="btn btn-success w-100">Actualizar</button>
         </form>
 
-        {status && <div className="mt-3 text-center text-info">{status}</div>}
+        {mensaje && <div className="mt-3 text-center text-info">{mensaje}</div>}
       </div>
     </div>
   );
-};
-
-export default ResetPassword;
+}
