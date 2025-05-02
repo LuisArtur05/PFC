@@ -18,7 +18,7 @@ const Login = () => {
 
       const userId = response.data;
 
-      // Guardar el ID en localStorage (o en contexto, como prefieras)
+      // Guardar el ID en localStorage
       localStorage.setItem("usuarioId", userId);
 
       // Redirigir al dashboard u otra página

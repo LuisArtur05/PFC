@@ -1,0 +1,16 @@
+.food-card {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.food-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.food-card.expanded {
+    background-color: #f0f8ff;
+    /* Fondo más claro cuando se expande */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+}
