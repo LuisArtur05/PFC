@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from "react";
-import AddButton from "../components/AddButton";
+import AddAlimentoForm from '../components/AddAlimentoForm';
 import FoodCard from '../components/FoodCard';
 import SideBar from "../components/SideBar";
 import BurguerMenu from "../components/BurguerMenu";
+import Header from "../components/Header";
+import { Collapse, Fade } from "react-bootstrap";
 import { getAlimentosPorUsuario } from "../services/alimentosService";
 
 const Prueba = () => {
+
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    {/* Handlers del formulario */ }
+    const [showForm, setShowForm] = useState(false);
+
+    const handleAddClick = () => {
+        setShowForm(true);
+    };
+
+    const handleCancelForm = () => {
+        setShowForm(false);
+    };
 
     {/*Recogemos los alimentos del usuario con en un array */ }
     const [alimentos, setAlimentos] = useState([]);
@@ -35,7 +50,7 @@ const Prueba = () => {
         <div className="container-fluid vh-100">
             <div className="row vh-100">
                 {/* Sidebar */}
-                <div className="col-1 p-3 d-none d-sm-block  text-center bg-light">
+                <div className="col-2 p-3 d-none d-sm-block  text-center bg-light">
                     <SideBar />
                 </div>
                 <div className="row d-block d-sm-none bg-light">
@@ -44,7 +59,46 @@ const Prueba = () => {
 
                 {/* Contenido principal */}
                 <div className="col d-flex flex-column bg-white vw-100">
-                    {/* Parte superior: Nevera / Congelador / Despensa */}
+
+                    {/* Header */}
+                    <Header title="Mi Nevera" onAddClick={handleAddClick} />
+
+                    {/* Overlay */}
+                    {showForm && (
+                        <div
+                            onClick={handleCancelForm}
+                            style={{
+                                position: "fixed",
+                                top: 0,
+                                left: 0,
+                                width: "100%",
+                                height: "100%",
+                                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                zIndex: 1040,
+                            }}
+                        />
+                    )}
+
+                    {/* Formulario collapsable */}
+                    <Collapse in={showForm}>
+                        <div
+                            style={{
+                                position: "fixed",
+                                top: "80px", // justo debajo del header
+                                right: "20px",
+                                width: "400px",
+                                background: "white",
+                                borderRadius: "12px",
+                                boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.2)",
+                                zIndex: 1050,
+                                padding: "20px",
+                            }}
+                        >
+                            <AddAlimentoForm onCancel={handleCancelForm} />
+                        </div>
+                    </Collapse>
+
+                    {/* Tarjetas de Nevera / Congelador / Despensa */}
                     <div className="row flex-grow-1  bg-white">
                         <div className="col-sm p-3 bg-white">
                             <h2 className="text-center" >Nevera</h2>
@@ -54,6 +108,14 @@ const Prueba = () => {
                                     nombre={item.nombre}
                                     descripcion={`Cantidad: ${item.cantidad}`}
                                     fecha={new Date(item.fecha_caducidad).toLocaleDateString()}
+                                    onSelect={() => {
+                                        if (selectedItem?.id_alimento === item.id_alimento) {
+                                            setSelectedItem(null); // Si ya está seleccionada, la deseleccionamos
+                                        } else {
+                                            setSelectedItem(item); // Si no, la seleccionamos
+                                        }
+                                    }}
+                                    isSelected={selectedItem?.id_alimento === item.id_alimento}
                                 />
                             ))}
                         </div>
@@ -65,6 +127,14 @@ const Prueba = () => {
                                     nombre={item.nombre}
                                     descripcion={`Cantidad: ${item.cantidad}`}
                                     fecha={new Date(item.fecha_caducidad).toLocaleDateString()}
+                                    onSelect={() => {
+                                        if (selectedItem?.id_alimento === item.id_alimento) {
+                                            setSelectedItem(null);
+                                        } else {
+                                            setSelectedItem(item);
+                                        }
+                                    }}
+                                    isSelected={selectedItem?.id_alimento === item.id_alimento}
                                 />
                             ))}
                         </div>
@@ -76,6 +146,14 @@ const Prueba = () => {
                                     nombre={item.nombre}
                                     descripcion={`Cantidad: ${item.cantidad}`}
                                     fecha={new Date(item.fecha_caducidad).toLocaleDateString()}
+                                    onSelect={() => {
+                                        if (selectedItem?.id_alimento === item.id_alimento) {
+                                            setSelectedItem(null);
+                                        } else {
+                                            setSelectedItem(item);
+                                        }
+                                    }}
+                                    isSelected={selectedItem?.id_alimento === item.id_alimento}
                                 />
                             ))}
                         </div>
@@ -84,7 +162,6 @@ const Prueba = () => {
                     {/* Barra inferior */}
                     <div className="row border p-3 align-content-end bg-white">
                         <div className="col">
-                            <AddButton />
                         </div>
                     </div>
                 </div>
