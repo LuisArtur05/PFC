@@ -2,6 +2,8 @@ package miapi.Tables;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +27,7 @@ public class Categoria {
     private Integer vida_promedio_dias;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List <Alimento> alimentos;
 
    

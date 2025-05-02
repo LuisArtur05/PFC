@@ -1,5 +1,7 @@
 package miapi.Service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -23,5 +25,9 @@ public class CategoriaService {
         }
         categoriaDAO.deleteById(id);
     }
+    public List<Categoria> obtenerTodasLasCategorias() {
+        return categoriaDAO.findAll();
+    }
+    
 
 }

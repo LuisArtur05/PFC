@@ -13,9 +13,12 @@ import lombok.RequiredArgsConstructor;
 import miapi.Service.CategoriaService;
 import miapi.Tables.Categoria;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -25,35 +28,45 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @RequiredArgsConstructor
 @Tag(name = "Categoria", description = "Registro de categorias")
 public class CategoriaController {
-    private final CategoriaService categoriaService;
+        private final CategoriaService categoriaService;
 
-    @PostMapping("/crearCategoria")
-    @Operation(summary = "Crear categoria", description = "Crea una nueva categoria en el sistema")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Categoria creado exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Solicitud incorrecta"),
-    })
-    public ResponseEntity<Categoria> crearCategoria(
-            @RequestBody(description = "Datos de la receta a crear", content = @Content(mediaType = "application/json", schema = @Schema(example = """
-                    {
-                      "nombre": "Azucares",
-                      "vida_promedio_dias": 100
-                    }
-                    """))) @org.springframework.web.bind.annotation.RequestBody Categoria categoria) {
+        @PostMapping("/crearCategoria")
+        @Operation(summary = "Crear categoria", description = "Crea una nueva categoria en el sistema")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "201", description = "Categoria creado exitosamente"),
+                        @ApiResponse(responseCode = "400", description = "Solicitud incorrecta"),
+        })
+        public ResponseEntity<Categoria> crearCategoria(
+                        @RequestBody(description = "Datos de la receta a crear", content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                                        {
+                                          "nombre": "Azucares",
+                                          "vida_promedio_dias": 100
+                                        }
+                                        """))) @org.springframework.web.bind.annotation.RequestBody Categoria categoria) {
 
-        categoriaService.createCategoria(categoria);
-        return new ResponseEntity<>(categoria, HttpStatus.CREATED);
-    }
+                categoriaService.createCategoria(categoria);
+                return new ResponseEntity<>(categoria, HttpStatus.CREATED);
+        }
 
-    @DeleteMapping("/eliminarCategoria/{id}")
-    @Operation(summary = "Eliminar categoría", description = "Elimina una categoría del sistema por su ID")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Categoría eliminada exitosamente"),
-            @ApiResponse(responseCode = "404", description = "Categoría no encontrada"),
-    })
-    public ResponseEntity<Void> eliminarCategoria(@PathVariable Integer id) {
-        categoriaService.eliminarCategoria(id);
-        return ResponseEntity.ok().build();
-    }
+        @DeleteMapping("/eliminarCategoria/{id}")
+        @Operation(summary = "Eliminar categoría", description = "Elimina una categoría del sistema por su ID")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Categoría eliminada exitosamente"),
+                        @ApiResponse(responseCode = "404", description = "Categoría no encontrada"),
+        })
+        public ResponseEntity<Void> eliminarCategoria(@PathVariable Integer id) {
+                categoriaService.eliminarCategoria(id);
+                return ResponseEntity.ok().build();
+        }
+
+        @GetMapping("/todas_categorias")
+        @Operation(summary = "Obtener todas las categorías", description = "Devuelve todas las categorías junto con sus alimentos asociados")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Listado obtenido exitosamente")
+        })
+        public ResponseEntity<List<Categoria>> obtenerTodasLasCategorias() {
+                List<Categoria> categorias = categoriaService.obtenerTodasLasCategorias();
+                return ResponseEntity.ok(categorias);
+        }
 
 }
