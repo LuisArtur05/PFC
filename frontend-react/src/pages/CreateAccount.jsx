@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import bcrypt from "bcryptjs"; // 👈 Agregado
 
 const CreateAccount = () => {
   const handleSubmit = async (e) => {
@@ -16,17 +17,20 @@ const CreateAccount = () => {
     }
 
     try {
+      // 🔥 Agregado: hashear después de validar que coinciden
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
       const response = await axios.post("http://localhost:8080/usuario/crearUsuario", {
         nombre,
         email,
-        password,
+        password: hashedPassword, // 👈 Mandar la contraseña hasheada
       });
 
-      // Puedes manejar el éxito aquí
       alert("Cuenta creada con éxito");
       console.log(response.data);
+      navigate("/login");
     } catch (error) {
-      // Manejo de errores
       alert("Hubo un error al crear la cuenta");
       console.error(error);
     }
