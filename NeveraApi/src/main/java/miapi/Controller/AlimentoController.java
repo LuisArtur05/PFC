@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,11 +16,13 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import miapi.DTO.AlimentoDTO;
 import miapi.Service.AlimentoService;
 import miapi.Tables.Alimento;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -55,6 +58,48 @@ public class AlimentoController {
 
                 Alimento alimento = alimentoService.createAlimento(alimentoDTO);
                 return new ResponseEntity<>(alimento, HttpStatus.CREATED);
+        }
+
+        @DeleteMapping("/eliminarAlimento/{id}")
+        @Operation(summary = "Eliminar alimento", description = "Elimina un alimento existente por su ID")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Alimento eliminado exitosamente"),
+                        @ApiResponse(responseCode = "404", description = "Alimento no encontrado")
+        })
+        public ResponseEntity<String> eliminarAlimento(@PathVariable Integer id) {
+                try {
+                        alimentoService.eliminarAlimento(id);
+                        return ResponseEntity.ok("Alimento eliminado exitosamente");
+                } catch (EntityNotFoundException e) {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+                }
+        }
+
+        @PutMapping("/actualizarAlimento/{id_alimento}/{usuario_id}")
+        @Operation(summary = "Actualizar alimento", description = "Actualiza un alimento existente. No se pueden modificar los campos id_alimento ni usuario_id.")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Alimento actualizado exitosamente"),
+                        @ApiResponse(responseCode = "404", description = "Alimento no encontrado o no pertenece al usuario")
+        })
+        public ResponseEntity<Alimento> actualizarAlimento(
+                        @PathVariable Integer id_alimento,
+                        @PathVariable Integer usuario_id,
+                        @RequestBody(description = "Datos del alimento a actualizar", content = @Content(mediaType = "application/json", schema = @Schema(example = """
+                                        {
+                                          "categoria_id": 4,
+                                          "nombre": "Leche Desnatada",
+                                          "fecha_caducidad": "2025-05-10",
+                                          "cantidad": 3,
+                                          "ubicacion": "Estante superior"
+                                        }
+                                        """))) @org.springframework.web.bind.annotation.RequestBody AlimentoDTO alimentoDTO) {
+
+                try {
+                        Alimento actualizado = alimentoService.actualizarAlimento(id_alimento, usuario_id, alimentoDTO);
+                        return ResponseEntity.ok(actualizado);
+                } catch (EntityNotFoundException e) {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                }
         }
 
         @GetMapping("/BuscarAlimento/{id}")

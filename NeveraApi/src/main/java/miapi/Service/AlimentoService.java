@@ -40,6 +40,38 @@ public class AlimentoService {
 
         return alimentoDAO.save(alimento);
     }
+    public void eliminarAlimento(Integer id) {
+        Alimento alimento = alimentoDAO.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Alimento no encontrado con ID: " + id));
+    
+        alimentoDAO.delete(alimento);
+    }
+    
+
+    public Alimento actualizarAlimento(Integer id_alimento, Integer usuario_id, AlimentoDTO dto) {
+        Alimento alimento = alimentoDAO.findById(id_alimento)
+            .orElseThrow(() -> new EntityNotFoundException("Alimento no encontrado con ID: " + id_alimento));
+    
+        if (!alimento.getUsuario().getId_usuario().equals(usuario_id)) {
+            throw new EntityNotFoundException("El alimento no pertenece al usuario con ID: " + usuario_id);
+        }
+    
+        // Ignorar los campos dto.getId_alimento() y dto.getUsuario_id()
+        if (dto.getNombre() != null) alimento.setNombre(dto.getNombre());
+        if (dto.getFecha_caducidad() != null) alimento.setFecha_caducidad(dto.getFecha_caducidad());
+        if (dto.getCantidad() != null) alimento.setCantidad(dto.getCantidad());
+        if (dto.getUbicacion() != null) alimento.setUbicacion(dto.getUbicacion());
+    
+        if (dto.getCategoria_id() != null) {
+            Categoria categoria = categoriaDAO.findByIdOrThrow(dto.getCategoria_id());
+            alimento.setCategoria(categoria);
+        }
+    
+        // NO modificar el usuario ni el id_alimento
+        return alimentoDAO.save(alimento);
+    }
+    
+    
 
     public AlimentoDTO buscarAlimentoPorId(Integer id) {
         Alimento alimento = alimentoDAO.findById(id)
@@ -56,6 +88,7 @@ public class AlimentoService {
     
         return dto;
     }
+    
 
 
     public List<AlimentoDTO> obtenerAlimentosPorUsuario(Integer usuarioId) {
