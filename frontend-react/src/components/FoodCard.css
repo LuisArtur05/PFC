@@ -10,7 +10,18 @@
 
 .food-card.expanded {
     background-color: #f0f8ff;
-    /* Fondo más claro cuando se expande */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     transform: scale(1.02);
+}
+
+/* STACKED debe comportarse igual visualmente, pero sin clic */
+.food-card.stacked {
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Este bloque es opcional porque hereda del hover global */
+.food-card.stacked:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }

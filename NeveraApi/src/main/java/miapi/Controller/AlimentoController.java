@@ -90,7 +90,7 @@ public class AlimentoController {
                                           "nombre": "Leche Desnatada",
                                           "fecha_caducidad": "2025-05-10",
                                           "cantidad": 3,
-                                          "ubicacion": "Estante superior"
+                                          "ubicacion": "Frigorifico"
                                         }
                                         """))) @org.springframework.web.bind.annotation.RequestBody AlimentoDTO alimentoDTO) {
 

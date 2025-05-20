@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +17,7 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_categoria_alimento")
-    private Integer id_categoria_alimento;
+    private Integer id_categoria;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
@@ -28,7 +27,6 @@ public class Categoria {
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List <Alimento> alimentos;
+    private List<Alimento> alimentos;
 
-   
 }
