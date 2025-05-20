@@ -1,16 +1,53 @@
-import { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Form, Button, FormSelect } from "react-bootstrap";
+import { getCategorias } from "../services/categoriasService";
+import { crearAlimento } from "../services/alimentosService";
+import DatePicker from "react-datepicker";
 
 export default function AddAlimentoForm({ onCancel }) {
     const [nombre, setNombre] = useState("");
-    const [categoria, setCategoria] = useState("");
-    const [fechaCaducidad, setFechaCaducidad] = useState("");
+    const [cantidad, setCantidad] = useState(1);
+    const [ubicacion, setUbicacion] = useState("Frigorifico"); // default
+    const [categoriaId, setCategoriaId] = useState("");
+    const [fechaCaducidad, setFechaCaducidad] = useState(new Date());
+    const [categorias, setCategorias] = useState([]);
 
-    const handleSubmit = (e) => {
+    // Cargar categorías desde el backend
+    useEffect(() => {
+        const fetchCategorias = async () => {
+            try {
+                const data = await getCategorias();
+                setCategorias(data);
+            } catch (error) {
+                console.error("Error al cargar categorías:", error);
+            }
+        };
+
+        fetchCategorias();
+    }, []);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aquí enviarías los datos (de momento solo console.log)
-        console.log({ nombre, categoria, fechaCaducidad });
-        onCancel(); // Cierra el formulario después de guardar
+
+        const nuevoAlimento = {
+            nombre,
+            cantidad: parseInt(cantidad),
+            fecha_caducidad: fechaCaducidad.toISOString().split("T")[0],
+            ubicacion,
+            usuario_id: parseInt(localStorage.getItem("usuarioId")),
+            categoria_id: parseInt(categoriaId)
+        };
+
+
+        console.log("JSON enviado:", nuevoAlimento);
+
+        try {
+            await crearAlimento(nuevoAlimento);
+            onCancel(); // cerrar el formulario
+            window.location.reload(); // opcional: recargar dashboard
+        } catch (error) {
+            console.error("Error al crear alimento:", error);
+        }
     };
 
     return (
@@ -25,22 +62,54 @@ export default function AddAlimentoForm({ onCancel }) {
                 />
             </Form.Group>
 
-            <Form.Group controlId="categoriaAlimento" className="mb-3">
-                <Form.Label>Categoría</Form.Label>
+            <Form.Group controlId="cantidadAlimento" className="mb-3">
+                <Form.Label>Cantidad</Form.Label>
                 <Form.Control
-                    type="text"
-                    value={categoria}
-                    onChange={(e) => setCategoria(e.target.value)}
+                    type="number"
+                    value={cantidad}
+                    min="1"
+                    onChange={(e) => setCantidad(e.target.value)}
                     required
                 />
             </Form.Group>
 
+            <Form.Group controlId="ubicacionAlimento" className="mb-3">
+                <Form.Label>Ubicación</Form.Label>
+                <Form.Select
+                    value={ubicacion}
+                    onChange={(e) => setUbicacion(e.target.value)}
+                    required
+                >
+                    <option value="Frigorifico">Frigorífico</option>
+                    <option value="Despensa">Despensa</option>
+                    <option value="Congelador">Congelador</option>
+                </Form.Select>
+            </Form.Group>
+
+            <Form.Group controlId="categoriaAlimento" className="mb-3">
+                <Form.Label>Categoría</Form.Label>
+                <FormSelect
+                    value={categoriaId}
+                    onChange={(e) => setCategoriaId(e.target.value)}
+                    required
+                >
+                    <option value="">Selecciona una categoría</option>
+                    {categorias.map((cat) => (
+                        <option key={cat.id_categoria} value={cat.id_categoria}>
+                            {cat.nombre}
+                        </option>
+                    ))}
+                </FormSelect>
+            </Form.Group>
+
             <Form.Group controlId="fechaCaducidad" className="mb-3">
                 <Form.Label>Fecha de caducidad</Form.Label>
-                <Form.Control
-                    type="date"
-                    value={fechaCaducidad}
-                    onChange={(e) => setFechaCaducidad(e.target.value)}
+                <DatePicker
+                    selected={fechaCaducidad}
+                    onChange={(date) => setFechaCaducidad(date)}
+                    dateFormat="yyyy-MM-dd"
+                    minDate={new Date()}
+                    className="form-control"
                     required
                 />
             </Form.Group>
