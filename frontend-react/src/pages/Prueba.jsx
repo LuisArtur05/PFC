@@ -5,11 +5,26 @@ import SideBar from "../components/SideBar";
 import BurguerMenu from "../components/BurguerMenu";
 import Header from "../components/Header";
 import { Collapse, Fade } from "react-bootstrap";
-import { getAlimentosPorUsuario } from "../services/alimentosService";
+import { getAlimentosPorUsuario, eliminarAlimento, actualizarAlimento } from "../services/alimentosService";
+import GroupedFoodCard from "../components/GroupedFoodCard";
+
 
 const Prueba = () => {
 
     const [selectedItem, setSelectedItem] = useState(null);
+
+    const [gruposAbiertos, setGruposAbiertos] = useState({});
+
+    const [busqueda, setBusqueda] = useState("");
+    const [modoBusqueda, setModoBusqueda] = useState(false);
+
+    const toggleGrupo = (nombreGrupo) => {
+        setGruposAbiertos((prev) => ({
+            ...prev,
+            [nombreGrupo]: !prev[nombreGrupo],
+        }));
+    };
+
 
     {/* Handlers del formulario */ }
     const [showForm, setShowForm] = useState(false);
@@ -42,9 +57,31 @@ const Prueba = () => {
         fetchAlimentos();
     }, [])
 
+    const agruparPorNombre = (lista) => {
+        return lista.reduce((acc, alimento) => {
+            const clave = alimento.nombre;
+            if (!acc[clave]) {
+                acc[clave] = [];
+            }
+            acc[clave].push(alimento);
+            return acc;
+        }, {});
+    };
+
     const alimentosNevera = alimentos.filter(a => a.ubicacion === "Frigorifico");
     const alimentosCongelador = alimentos.filter(a => a.ubicacion === "Congelador")
     const alimentosDespensa = alimentos.filter(a => a.ubicacion === "Despensa")
+
+    const agrupadosNevera = agruparPorNombre(alimentosNevera);
+    const agrupadosCongelador = agruparPorNombre(alimentosCongelador);
+    const agrupadosDespensa = agruparPorNombre(alimentosDespensa);
+
+    const alimentosFiltrados = alimentos.filter((a) =>
+        a.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    );
+    const agrupadosBusqueda = agruparPorNombre(alimentosFiltrados);
+
+
 
     return (
         <div className="container-fluid vh-100">
@@ -61,7 +98,15 @@ const Prueba = () => {
                 <div className="col d-flex flex-column bg-white vw-100">
 
                     {/* Header */}
-                    <Header title="Mi Nevera" onAddClick={handleAddClick} />
+                    <Header
+                        title="Mi Nevera"
+                        onAddClick={handleAddClick}
+                        search={busqueda}
+                        onSearchChange={(value) => {
+                            setBusqueda(value);
+                            setModoBusqueda(value !== "");
+                        }}
+                    />
 
                     {/* Overlay */}
                     {showForm && (
@@ -102,59 +147,210 @@ const Prueba = () => {
                     <div className="row flex-grow-1  bg-white">
                         <div className="col-sm p-3 bg-white">
                             <h2 className="text-center" >Nevera</h2>
-                            {alimentosNevera.map((item, index) => (
-                                <FoodCard
-                                    key={`nevera-${item.id_alimento}`}
-                                    nombre={item.nombre}
-                                    descripcion={`Cantidad: ${item.cantidad}`}
-                                    fecha={new Date(item.fecha_caducidad).toLocaleDateString()}
-                                    onSelect={() => {
-                                        if (selectedItem?.id_alimento === item.id_alimento) {
-                                            setSelectedItem(null); // Si ya está seleccionada, la deseleccionamos
-                                        } else {
-                                            setSelectedItem(item); // Si no, la seleccionamos
-                                        }
-                                    }}
-                                    isSelected={selectedItem?.id_alimento === item.id_alimento}
-                                />
+                            {Object.entries(agrupadosNevera).map(([nombreGrupo, lotes]) => (
+                                lotes.length === 1 ? (
+                                    <FoodCard
+                                        key={lotes[0].id_alimento}
+                                        nombre={nombreGrupo}
+                                        cantidad={lotes[0].cantidad}
+                                        fecha={new Date(lotes[0].fecha_caducidad).toLocaleDateString("es-ES")}
+                                        onSelect={() => {
+                                            if (selectedItem?.id_alimento === lotes[0].id_alimento) {
+                                                setSelectedItem(null);
+                                            } else {
+                                                setSelectedItem(lotes[0]);
+                                            }
+                                        }}
+                                        isSelected={selectedItem?.id_alimento === lotes[0].id_alimento}
+                                        onEliminar={async () => {
+                                            await eliminarAlimento(lotes[0].id_alimento);
+                                            setSelectedItem(null);
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                        }}
+                                        onGuardar={async (alimentoEditado) => {
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const actualizado = {
+                                                ...lotes[0],
+                                                nombre: alimentoEditado.nombre,
+                                                cantidad: alimentoEditado.cantidad,
+                                                fecha_caducidad: alimentoEditado.fecha,
+                                            };
+                                            await actualizarAlimento(lotes[0].id_alimento, usuarioId, actualizado);
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                            setSelectedItem(null);
+                                        }}
+                                    />
+                                ) : (
+                                    <GroupedFoodCard
+                                        key={nombreGrupo}
+                                        grupoNombre={nombreGrupo}
+                                        lotes={lotes}
+                                        onSelect={setSelectedItem}
+                                        selectedItem={selectedItem}
+                                        onEliminar={async (alimento) => {
+                                            await eliminarAlimento(alimento.id_alimento);
+                                            setSelectedItem(null);
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                        }}
+                                        onGuardar={async (original, editado) => {
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const actualizado = {
+                                                ...original,
+                                                nombre: editado.nombre,
+                                                cantidad: editado.cantidad,
+                                                fecha_caducidad: editado.fecha,
+                                            };
+                                            await actualizarAlimento(original.id_alimento, usuarioId, actualizado);
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                            setSelectedItem(null);
+                                        }}
+                                    />
+                                )
                             ))}
                         </div>
                         <div className="col-sm p-3 bg-white">
                             <h2 className="text-center" >Congelador</h2>
-                            {alimentosCongelador.map((item, index) => (
-                                <FoodCard
-                                    key={`nevera-${item.id_alimento}`}
-                                    nombre={item.nombre}
-                                    descripcion={`Cantidad: ${item.cantidad}`}
-                                    fecha={new Date(item.fecha_caducidad).toLocaleDateString()}
-                                    onSelect={() => {
-                                        if (selectedItem?.id_alimento === item.id_alimento) {
+                            {Object.entries(agrupadosCongelador).map(([nombreGrupo, lotes]) => (
+                                lotes.length === 1 ? (
+                                    <FoodCard
+                                        key={lotes[0].id_alimento}
+                                        nombre={nombreGrupo}
+                                        cantidad={lotes[0].cantidad}
+                                        fecha={new Date(lotes[0].fecha_caducidad).toLocaleDateString("es-ES")}
+                                        onSelect={() => {
+                                            if (selectedItem?.id_alimento === lotes[0].id_alimento) {
+                                                setSelectedItem(null);
+                                            } else {
+                                                setSelectedItem(lotes[0]);
+                                            }
+                                        }}
+                                        isSelected={selectedItem?.id_alimento === lotes[0].id_alimento}
+                                        onEliminar={async () => {
+                                            await eliminarAlimento(lotes[0].id_alimento);
                                             setSelectedItem(null);
-                                        } else {
-                                            setSelectedItem(item);
-                                        }
-                                    }}
-                                    isSelected={selectedItem?.id_alimento === item.id_alimento}
-                                />
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                        }}
+                                        onGuardar={async (alimentoEditado) => {
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const actualizado = {
+                                                ...lotes[0],
+                                                nombre: alimentoEditado.nombre,
+                                                cantidad: alimentoEditado.cantidad,
+                                                fecha_caducidad: alimentoEditado.fecha,
+                                            };
+                                            await actualizarAlimento(lotes[0].id_alimento, usuarioId, actualizado);
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                            setSelectedItem(null);
+                                        }}
+                                    />
+                                ) : (
+                                    <GroupedFoodCard
+                                        key={nombreGrupo}
+                                        grupoNombre={nombreGrupo}
+                                        lotes={lotes}
+                                        onSelect={setSelectedItem}
+                                        selectedItem={selectedItem}
+                                        onEliminar={async (alimento) => {
+                                            await eliminarAlimento(alimento.id_alimento);
+                                            setSelectedItem(null);
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                        }}
+                                        onGuardar={async (original, editado) => {
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const actualizado = {
+                                                ...original,
+                                                nombre: editado.nombre,
+                                                cantidad: editado.cantidad,
+                                                fecha_caducidad: editado.fecha,
+                                            };
+                                            await actualizarAlimento(original.id_alimento, usuarioId, actualizado);
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                            setSelectedItem(null);
+                                        }}
+                                    />
+                                )
                             ))}
                         </div>
                         <div className="col-sm p-3 bg-white">
                             <h2 className="text-center" >Despensa</h2>
-                            {alimentosDespensa.map((item, index) => (
-                                <FoodCard
-                                    key={`nevera-${item.id_alimento}`}
-                                    nombre={item.nombre}
-                                    descripcion={`Cantidad: ${item.cantidad}`}
-                                    fecha={new Date(item.fecha_caducidad).toLocaleDateString()}
-                                    onSelect={() => {
-                                        if (selectedItem?.id_alimento === item.id_alimento) {
+                            {Object.entries(agrupadosDespensa).map(([nombreGrupo, lotes]) => (
+                                lotes.length === 1 ? (
+                                    <FoodCard
+                                        key={lotes[0].id_alimento}
+                                        nombre={nombreGrupo}
+                                        cantidad={lotes[0].cantidad}
+                                        fecha={new Date(lotes[0].fecha_caducidad).toLocaleDateString("es-ES")}
+                                        onSelect={() => {
+                                            if (selectedItem?.id_alimento === lotes[0].id_alimento) {
+                                                setSelectedItem(null);
+                                            } else {
+                                                setSelectedItem(lotes[0]);
+                                            }
+                                        }}
+                                        isSelected={selectedItem?.id_alimento === lotes[0].id_alimento}
+                                        onEliminar={async () => {
+                                            await eliminarAlimento(lotes[0].id_alimento);
                                             setSelectedItem(null);
-                                        } else {
-                                            setSelectedItem(item);
-                                        }
-                                    }}
-                                    isSelected={selectedItem?.id_alimento === item.id_alimento}
-                                />
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                        }}
+                                        onGuardar={async (alimentoEditado) => {
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const actualizado = {
+                                                ...lotes[0],
+                                                nombre: alimentoEditado.nombre,
+                                                cantidad: alimentoEditado.cantidad,
+                                                fecha_caducidad: alimentoEditado.fecha,
+                                            };
+                                            await actualizarAlimento(lotes[0].id_alimento, usuarioId, actualizado);
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                            setSelectedItem(null);
+                                        }}
+                                    />
+
+                                ) : (
+                                    <GroupedFoodCard
+                                        key={nombreGrupo}
+                                        grupoNombre={nombreGrupo}
+                                        lotes={lotes}
+                                        onSelect={setSelectedItem}
+                                        selectedItem={selectedItem}
+                                        onEliminar={async (alimento) => {
+                                            await eliminarAlimento(alimento.id_alimento);
+                                            setSelectedItem(null);
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                        }}
+                                        onGuardar={async (original, editado) => {
+                                            const usuarioId = localStorage.getItem("usuarioId");
+                                            const actualizado = {
+                                                ...original,
+                                                nombre: editado.nombre,
+                                                cantidad: editado.cantidad,
+                                                fecha_caducidad: editado.fecha,
+                                            };
+                                            await actualizarAlimento(original.id_alimento, usuarioId, actualizado);
+                                            const data = await getAlimentosPorUsuario(usuarioId);
+                                            setAlimentos(data);
+                                            setSelectedItem(null);
+                                        }}
+                                    />
+                                )
                             ))}
                         </div>
                     </div>
