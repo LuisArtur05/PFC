@@ -22,7 +22,7 @@ const Login = () => {
       localStorage.setItem("usuarioId", userId);
 
       // Redirigir al dashboard u otra página
-      navigate("/dashboard");
+      navigate("/nevera");
 
     } catch (error) {
       console.error("Error en el login:", error.response?.data || error.message);

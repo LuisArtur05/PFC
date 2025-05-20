@@ -1,6 +1,5 @@
 package miapi.Tables;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,12 +15,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import miapi.Config.Ubicacion;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="alimentos")
+@Table(name = "alimentos")
 public class Alimento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +27,12 @@ public class Alimento {
     private Integer id_alimento;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id",nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id",nullable = false)
-    private  Categoria categoria;
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
