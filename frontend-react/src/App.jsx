@@ -11,6 +11,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Lista from "./pages/Lista";
 import Recetas from "./pages/Recetas";
+import RecetasIA from "./pages/RecetasIA";
 
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -28,6 +29,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/lista" element={<Lista />} />
         <Route path="/recetas" element={<Recetas />} />
+        <Route path="/recetasIA" element={<RecetasIA />} />
       </Routes>
     </Router>
   );

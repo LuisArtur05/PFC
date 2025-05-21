@@ -20,7 +20,7 @@ export default function ResetPassword() {
     }
 
     try {
-      // 🔥 Hashear la nueva contraseña
+
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(nuevaPassword, salt);
 
