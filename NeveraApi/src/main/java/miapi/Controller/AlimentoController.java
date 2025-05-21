@@ -129,4 +129,20 @@ public class AlimentoController {
                 return ResponseEntity.ok(alimentos); // Devuelve la lista de alimentos con un 200 OK
         }
 
+        @GetMapping("/BuscarNombresAlimentosSinCaducar/{usuarioId}")
+        @Operation(summary = "Nombres de alimentos sin caducar por ID de usuario", description = "Devuelve solo los nombres de los alimentos cuya fecha de caducidad es mayor que la actual")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Nombres encontrados"),
+                        @ApiResponse(responseCode = "404", description = "No se encontraron alimentos válidos o usuario no existe"),
+        })
+        public ResponseEntity<List<String>> obtenerNombresAlimentosSinCaducar(@PathVariable Integer usuarioId) {
+                List<String> nombres = alimentoService.obtenerNombresAlimentosSinCaducarPorUsuario(usuarioId);
+
+                if (nombres.isEmpty()) {
+                        return ResponseEntity.notFound().build();
+                }
+
+                return ResponseEntity.ok(nombres);
+        }
+
 }

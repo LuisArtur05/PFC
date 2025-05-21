@@ -36,10 +36,13 @@ public class Alimento {
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
+
     @Column(name = "fecha_caducidad", nullable = false)
     private java.sql.Date fecha_caducidad;
+
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "ubicacion", nullable = false)
     private Ubicacion ubicacion;

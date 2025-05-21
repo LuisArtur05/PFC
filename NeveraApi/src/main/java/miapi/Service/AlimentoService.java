@@ -109,4 +109,14 @@ public class AlimentoService {
         }).collect(Collectors.toList());
     }
 
+    public List<String> obtenerNombresAlimentosSinCaducarPorUsuario(Integer usuarioId) {
+        List<Alimento> alimentos = alimentoDAO.buscarPorUsuarioConCaducidadValida(usuarioId);
+    
+        // Solo devolvemos los nombres
+        return alimentos.stream()
+                .map(Alimento::getNombre)
+                .collect(Collectors.toList());
+    }
+    
+    
 }

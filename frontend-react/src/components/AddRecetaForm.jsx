@@ -4,10 +4,22 @@ import { Form, Button } from "react-bootstrap";
 const AddRecetaForm = ({ onCancel }) => {
     const [nombre, setNombre] = useState("");
     const [ingredientes, setIngredientes] = useState("");
+    const [instrucciones, setInstrucciones] = useState("");
+    const [tiempoPreparacion, setTiempoPreparacion] = useState("");
+    const [dificultad, setDificultad] = useState("");
+    const [precio, setPrecio] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Nueva Receta:", { nombre, ingredientes });
+        const nuevaReceta = {
+            nombre,
+            ingredientes,
+            instrucciones,
+            tiempoPreparacion,
+            dificultad,
+            precio,
+        };
+        console.log("Nueva Receta:", nuevaReceta);
         // Aquí podrías hacer un POST al backend
         onCancel();
     };
@@ -25,14 +37,53 @@ const AddRecetaForm = ({ onCancel }) => {
                 />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formIngredientesReceta">
-                <Form.Label>Ingredientes principales</Form.Label>
+
+            <Form.Group className="mb-3" controlId="formInstrucciones">
+                <Form.Label>Instrucciones</Form.Label>
                 <Form.Control
                     as="textarea"
-                    placeholder="Ej: Lechuga, pollo, parmesano"
-                    value={ingredientes}
-                    onChange={(e) => setIngredientes(e.target.value)}
+                    placeholder="Describe los pasos de la receta"
+                    value={instrucciones}
+                    onChange={(e) => setInstrucciones(e.target.value)}
                     rows={3}
+                    required
+                />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formTiempoPreparacion">
+                <Form.Label>Tiempo de preparación (minutos)</Form.Label>
+                <Form.Control
+                    type="number"
+                    placeholder="Ej: 20"
+                    value={tiempoPreparacion}
+                    onChange={(e) => setTiempoPreparacion(e.target.value)}
+                    required
+                />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formDificultad">
+                <Form.Label>Dificultad</Form.Label>
+                <Form.Select
+                    value={dificultad}
+                    onChange={(e) => setDificultad(e.target.value)}
+                    required
+                >
+                    <option value="">Selecciona una dificultad</option>
+                    <option value="Fácil">Fácil</option>
+                    <option value="Media">Media</option>
+                    <option value="Difícil">Difícil</option>
+                </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formPrecio">
+                <Form.Label>Precio(€)</Form.Label>
+                <Form.Control
+                    type="number"
+                    placeholder="Ej: 12.50"
+                    value={precio}
+                    onChange={(e) => setPrecio(e.target.value)}
+                    min="0"
+                    step="0.01"
                     required
                 />
             </Form.Group>

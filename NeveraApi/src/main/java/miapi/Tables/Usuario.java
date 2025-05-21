@@ -20,12 +20,18 @@ public class Usuario {
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
+
     @Column(name = "email", nullable = false)
     private String email;
+    
     @Column(name = "password", nullable = false)
     private String password;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List <Alimento> alimentos;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List <Receta> recetas;
+    
    
 }

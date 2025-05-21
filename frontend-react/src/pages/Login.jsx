@@ -26,6 +26,7 @@ const Login = () => {
 
     } catch (error) {
       console.error("Error en el login:", error.response?.data || error.message);
+      alert("Usuario o contraseña incorrectos.");
     }
   };
 
