@@ -29,3 +29,7 @@ export const actualizarAlimento = async (id_alimento, usuario_id, alimentoActual
     );
     return response.data;
 };
+export const getNombresAlimentosSinCaducar = async (usuarioId) => {
+    const response = await api.get(`/alimento/BuscarNombresAlimentosSinCaducar/${usuarioId}`);
+    return response.data;
+};
