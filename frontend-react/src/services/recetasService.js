@@ -10,22 +10,45 @@ export const postReceta = async (receta) => {
     return response.data;
 };
 
+export async function actualizarReceta(usuarioId, idReceta, recetaDTO) {
+  const response = await api.put(`recetas/${usuarioId}/${idReceta}`, recetaDTO);
+  return response.data;
+}
+
+
+export const eliminarReceta = async(receta_id)=>{
+  const response = await api.delete(`/recetas/Eliminar/${receta_id}`);
+  return response.data
+};
+
+
 export const generarRecetaConIA = async (alimentos) => {
+  try {
+    console.log("Alimentos recibidos:", alimentos);
+
     const prompt = `Tengo estos alimentos: ${alimentos.join(", ")}. ¿Puedes darme una receta con ellos dandome el Nombre,Alimentos,Instrucciones,Tiempo de preparacion, D : ificultad:(Fácil,Media,Difícil),Precio(Valor numerico). damelo en formato json y sin responder a nada más`;
 
     const response = await axios.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        {
-            model: "deepseek/deepseek-chat",
-            messages: [{ role: "user", content: prompt }],
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        model: "deepseek/deepseek-chat",
+        messages: [{ role: "user", content: prompt }],
+      },
+      {
+        headers: {
+          Authorization: "Bearer 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",
+          "Content-Type": "application/json",
         },
-        {
-            headers: {
-                Authorization: "Bearer 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",
-                "Content-Type": "application/json",
-            },
-        }
+      }
     );
 
     return response.data.choices[0].message.content;
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      console.error("Error 401 Unauthorized: Token inválido o expirado.");
+    } else {
+      console.error("Error generando receta con IA:", error.message);
+    }
+    throw error;  // Re-lanzar error para manejarlo más arriba si quieres
+  }
 };

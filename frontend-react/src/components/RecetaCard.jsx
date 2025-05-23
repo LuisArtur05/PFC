@@ -1,22 +1,42 @@
 import React, { useState } from "react";
+import { Alert } from "react-bootstrap";
 import "./FoodCard.css";
 
-export default function RecetaCard({ receta, isSelected, onSelect, onEdit, onDelete }) {
+export default function RecetaCard({ receta, isSelected, onSelect, onGuardar, onEliminar }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ ...receta });
+  const [editedData, setEditedData] = useState({ ...receta });
+  const [validationError, setValidationError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditData(prev => ({ ...prev, [name]: value }));
+    setEditedData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = () => {
-    onEdit(editData);
+    if (!editedData.nombre?.trim()) {
+      setValidationError("El nombre no puede estar vacío.");
+      return;
+    }
+    if (!editedData.tiempo_preparacion || editedData.tiempo_preparacion <= 0) {
+      setValidationError("El tiempo de preparación debe ser mayor a 0.");
+      return;
+    }
+    if (!editedData.precio || isNaN(editedData.precio)) {
+      setValidationError("El precio debe ser un número válido.");
+      return;
+    }
+
+    setValidationError(null);
     setIsEditing(false);
+
+    if (onGuardar) {
+      onGuardar(editedData);
+    }
   };
 
   const handleCancel = () => {
-    setEditData({ ...receta });
+    setEditedData({ ...receta });
+    setValidationError(null);
     setIsEditing(false);
   };
 
@@ -29,45 +49,52 @@ export default function RecetaCard({ receta, isSelected, onSelect, onEdit, onDel
       <div className="card-body">
         {isEditing ? (
           <div className="d-flex flex-column gap-2">
+            {validationError && (
+              <Alert variant="danger" onClose={() => setValidationError(null)} dismissible>
+                {validationError}
+              </Alert>
+            )}
             <input
               className="form-control"
               name="nombre"
-              value={editData.nombre}
+              value={editedData.nombre}
               onChange={handleChange}
               placeholder="Nombre"
             />
             <textarea
               className="form-control"
               name="descripcion"
-              value={editData.descripcion}
+              value={editedData.descripcion}
               onChange={handleChange}
               placeholder="Descripción"
             />
             <textarea
               className="form-control"
               name="instrucciones"
-              value={editData.instrucciones}
+              value={editedData.instrucciones}
               onChange={handleChange}
               placeholder="Instrucciones"
             />
             <input
+              type="number"
               className="form-control"
               name="tiempo_preparacion"
-              value={editData.tiempo_preparacion}
+              value={editedData.tiempo_preparacion}
               onChange={handleChange}
               placeholder="Tiempo de preparación (min)"
             />
             <input
               className="form-control"
               name="dificultad"
-              value={editData.dificultad}
+              value={editedData.dificultad}
               onChange={handleChange}
               placeholder="Dificultad"
             />
             <input
+              type="number"
               className="form-control"
               name="precio"
-              value={editData.precio}
+              value={editedData.precio}
               onChange={handleChange}
               placeholder="Precio (€)"
             />
@@ -102,16 +129,20 @@ export default function RecetaCard({ receta, isSelected, onSelect, onEdit, onDel
               </p>
             )}
             {receta.tiempo_preparacion && (
-              <p className="card-text"><small>Tiempo: {receta.tiempo_preparacion} min</small></p>
+              <p className="card-text">
+                <small>Tiempo: {receta.tiempo_preparacion} min</small>
+              </p>
             )}
             {receta.dificultad && (
-              <p className="card-text"><small>Dificultad: {receta.dificultad}</small></p>
+              <p className="card-text">
+                <small>Dificultad: {receta.dificultad}</small>
+              </p>
             )}
             {receta.precio && (
-              <p className="card-text"><small>Precio: {receta.precio} €</small></p>
+              <p className="card-text">
+                <small>Precio: {receta.precio} €</small>
+              </p>
             )}
-
-            {/* Mostrar botones solo si la tarjeta está seleccionada */}
             {isSelected && (
               <div className="mt-3 d-flex gap-2 justify-content-center">
                 <button
@@ -127,7 +158,7 @@ export default function RecetaCard({ receta, isSelected, onSelect, onEdit, onDel
                   className="btn btn-outline-danger btn-sm"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onDelete();
+                    if (onEliminar) onEliminar();
                   }}
                 >
                   Eliminar
