@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../components/SideBar";
 import BurguerMenu from "../components/BurguerMenu";
-import Header from "../components/Header";
+import HeaderRecetas from "../components/HeaderRecetas";
 import RecetaCard from "../components/RecetaCard";
 import AddRecetaForm from "../components/AddRecetaForm";
-import { getRecetasPorUsuario } from "../services/RecetasService";
 import { Collapse } from "react-bootstrap";
+import { getRecetasPorUsuario, eliminarReceta, actualizarReceta } from "../services/RecetasService";
 
 const Recetas = () => {
   const [recetas, setRecetas] = useState([]);
@@ -19,6 +19,12 @@ const Recetas = () => {
 
       try {
         const data = await getRecetasPorUsuario(usuarioId);
+
+        // Opcional: Añadir campo id para facilitar uso en componentes
+        // const recetasConId = data.map(r => ({ ...r, id: r.id_receta }));
+        // setRecetas(recetasConId);
+
+        // O usar directamente id_receta en todo el código
         setRecetas(data);
       } catch (error) {
         console.error("Error al obtener recetas:", error);
@@ -28,18 +34,56 @@ const Recetas = () => {
     fetchRecetas();
   }, []);
 
-  const handleEdit = (recetaEditada) => {
-    setRecetas(prev => prev.map(r => r.id === recetaEditada.id ? recetaEditada : r));
-  };
-
-  const handleDelete = (recetaAEliminar) => {
-    setRecetas(prev => prev.filter(r => r.id !== recetaAEliminar.id));
-    setSelectedReceta(null);
+  const refreshRecetas = async () => {
+    const usuarioId = localStorage.getItem("usuarioId");
+    if (!usuarioId) return;
+    const data = await getRecetasPorUsuario(usuarioId);
+    setRecetas(data);
   };
 
   const handleAddClick = () => setShowForm(true);
   const handleCancelForm = () => setShowForm(false);
-  const handleAddReceta = (nuevaReceta) => setRecetas(prev => [...prev, nuevaReceta]);
+
+  const handleDelete = async (receta) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar esta receta?")) {
+      try {
+        await eliminarReceta(receta.id_receta);
+        setSelectedReceta(null);
+        await refreshRecetas();
+      } catch (error) {
+        console.error("Error al eliminar receta:", error);
+      }
+    }
+  };
+
+  const handleGuardar = async (recetaEditada) => {
+    try {
+      const usuarioId = localStorage.getItem("usuarioId");
+      if (!usuarioId) throw new Error("Usuario no identificado");
+      if (!recetaEditada.id_receta) throw new Error("Id de receta no definido");
+
+      // Prepara el objeto con los campos que espera el backend
+      const { nombre, instrucciones, tiempo_preparacion, dificultad, precio } = recetaEditada;
+      const actualizado = {
+        nombre,
+        instrucciones,
+        tiempo_preparacion,
+        dificultad,
+        precio,
+      };
+
+      await actualizarReceta(usuarioId, recetaEditada.id_receta, actualizado);
+      await refreshRecetas();
+      setSelectedReceta(null);
+    } catch (error) {
+      console.error("Error al actualizar receta:", error);
+    }
+  };
+
+  const handleAddReceta = (nuevaReceta) => {
+    setRecetas((prev) => [...prev, nuevaReceta]);
+    setShowForm(false);
+  };
 
   return (
     <div className="container-fluid vh-100">
@@ -52,7 +96,7 @@ const Recetas = () => {
         </div>
 
         <div className="col d-flex flex-column bg-white vw-100">
-          <Header title="Recetas" onAddClick={handleAddClick} />
+          <HeaderRecetas title="Recetas" onAddClick={handleAddClick} />
 
           {showForm && (
             <div
@@ -91,23 +135,17 @@ const Recetas = () => {
             <div className="col-md-8 p-4">
               {recetas.map((receta) => (
                 <RecetaCard
-                  key={receta.id}
+                  key={receta.id_receta}  // aquí el cambio clave
                   receta={receta}
-                  isSelected={selectedReceta?.id === receta.id}
+                  isSelected={selectedReceta?.id_receta === receta.id_receta}
                   onSelect={() =>
-                    setSelectedReceta(
-                      selectedReceta?.id === receta.id ? null : receta
-                    )
+                    setSelectedReceta(selectedReceta?.id_receta === receta.id_receta ? null : receta)
                   }
-                  onEdit={handleEdit}
-                  onDelete={() => handleDelete(receta)}
+                  onEliminar={() => handleDelete(receta)}
+                  onGuardar={handleGuardar}
                 />
               ))}
             </div>
-          </div>
-
-          <div className="row border p-3 bg-white">
-            <div className="col"></div>
           </div>
         </div>
       </div>

@@ -65,7 +65,7 @@ public ResponseEntity<Receta> crearReceta(
     }
 
     @PutMapping("/{usuarioId}/{idReceta}")
-public ResponseEntity<RecetaDTO> actualizarReceta(
+    public ResponseEntity<RecetaDTO> actualizarReceta(
         @PathVariable Integer usuarioId,
         @PathVariable Integer idReceta,
         @RequestBody(description = "Datos actualizados de la receta (excepto id y usuario_id)",
