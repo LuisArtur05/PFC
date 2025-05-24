@@ -1,10 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';  // Importa el hook
 
-const ReturnButton = ({ onClick }) => {
+const ReturnButton = () => {
+    const navigate = useNavigate();  // Inicializa navegación
+
+    const handleClick = () => {
+        navigate("/recetas");  // Redirecciona al hacer clic
+    };
+
     return (
         <StyledWrapper>
-            <button className="cssbuttons-io-button" onClick={onClick}>
+            <button className="cssbuttons-io-button" onClick={handleClick}>
                 <svg height={24} width={24} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 0h24v24H0z" fill="none" />
                     <path d="M12 2L5 9h3v4h4V9h3z" fill="currentColor" />
