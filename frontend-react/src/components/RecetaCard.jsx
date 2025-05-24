@@ -61,13 +61,7 @@ export default function RecetaCard({ receta, isSelected, onSelect, onGuardar, on
               onChange={handleChange}
               placeholder="Nombre"
             />
-            <textarea
-              className="form-control"
-              name="descripcion"
-              value={editedData.descripcion}
-              onChange={handleChange}
-              placeholder="Descripción"
-            />
+           
             <textarea
               className="form-control"
               name="instrucciones"
@@ -130,17 +124,17 @@ export default function RecetaCard({ receta, isSelected, onSelect, onGuardar, on
             )}
             {receta.tiempo_preparacion && (
               <p className="card-text">
-                <small>Tiempo: {receta.tiempo_preparacion} min</small>
+                <strong>Tiempo de preparación:</strong> {receta.tiempo_preparacion} min
               </p>
             )}
             {receta.dificultad && (
               <p className="card-text">
-                <small>Dificultad: {receta.dificultad}</small>
+                <strong>Dificultad: </strong>{receta.dificultad}
               </p>
             )}
             {receta.precio && (
               <p className="card-text">
-                <small>Precio: {receta.precio} €</small>
+                <strong>Precio:</strong> {receta.precio} €
               </p>
             )}
             {isSelected && (
