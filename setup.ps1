@@ -5,5 +5,4 @@ Start-Sleep -Seconds 10
 
 Write-Host "Iniciando frontend React..."
 Set-Location -Path "frontend-react"
-npm install
 npm start
