@@ -22,7 +22,7 @@ export const getAlimentosPorUsuario = async (usuarioId) => {
     return response.data;
 };
 
-export const getAlimentosPorUsuario_Litsa = async (usuarioId) => {
+export const getAlimentosPorUsuario_lista = async (usuarioId) => {
     const response = await api.get(`/alimento/BuscarAlimentosPorUsuario/lista/${usuarioId}`);
     return response.data;
 };
