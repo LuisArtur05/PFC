@@ -61,7 +61,7 @@ public class RecetaService {
             dto.setInstrucciones(receta.getInstrucciones());
             dto.setTiempo_preparacion(receta.getTiempo_preparacion());
             dto.setDificultad(receta.getDificultad());
-            dto.setPrecio(receta.getPrecio()); // ✅ NUEVO
+            dto.setPrecio(receta.getPrecio()); 
             return dto;
         }).toList();
     }

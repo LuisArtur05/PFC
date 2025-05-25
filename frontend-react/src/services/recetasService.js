@@ -36,7 +36,7 @@ export const generarRecetaConIA = async (alimentos) => {
       },
       {
         headers: {
-          Authorization: "Bearer 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",
+          Authorization: "Bearer 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",
           "Content-Type": "application/json",
         },
       }

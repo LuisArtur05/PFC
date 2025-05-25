@@ -18,4 +18,8 @@ public class AlimentoDTO {
     private Date fecha_caducidad;
     private Integer cantidad;
     private Ubicacion ubicacion;
+    private Float precio;
+    private String proveedor;
+    private Integer lista_active;
+    private Integer nevera_active;
 }

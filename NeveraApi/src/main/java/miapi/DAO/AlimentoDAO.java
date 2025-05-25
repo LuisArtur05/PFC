@@ -17,4 +17,9 @@ public interface AlimentoDAO extends JpaRepository<Alimento, Integer> {
 
     @Query("SELECT a FROM Alimento a WHERE a.usuario.id_usuario = :usuarioId AND a.fecha_caducidad > CURRENT_DATE")
     List<Alimento> buscarPorUsuarioConCaducidadValida(@Param("usuarioId") Integer usuarioId);
+
+    default Alimento findByIdOrThrow(Integer id) {
+        return findById(id)
+                .orElseThrow(() -> new RuntimeException("Alimento no encontrado con ID: " + id));
+    }
 }
