@@ -46,4 +46,19 @@ public class Alimento {
     @Enumerated(EnumType.STRING)
     @Column(name = "ubicacion", nullable = false)
     private Ubicacion ubicacion;
+
+    @Column(name = "precio", nullable = false)
+    private Float precio;
+
+    @Column(name = "proveedor", nullable = false)
+    private String proveedor;
+
+    @Column(name = "lista_active", nullable = false)
+    private Integer lista_active;
+
+     @Column(name = "nevera_active", nullable = false)
+    private Integer nevera_active;
+
+
+
 }
