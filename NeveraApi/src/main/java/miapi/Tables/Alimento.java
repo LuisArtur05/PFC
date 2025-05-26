@@ -37,28 +37,26 @@ public class Alimento {
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "fecha_caducidad", nullable = false)
+    @Column(name = "fecha_caducidad", nullable = true)
     private java.sql.Date fecha_caducidad;
 
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "ubicacion", nullable = false)
     private Ubicacion ubicacion;
 
-    @Column(name = "precio", nullable = false)
+    @Column(name = "precio", nullable = true)
     private Float precio;
 
-    @Column(name = "proveedor", nullable = false)
+    @Column(name = "proveedor", nullable = true)
     private String proveedor;
 
-    @Column(name = "lista_active", nullable = false)
+    @Column(name = "lista_active")
     private Integer lista_active;
 
-     @Column(name = "nevera_active", nullable = false)
+    @Column(name = "nevera_active")
     private Integer nevera_active;
-
-
 
 }

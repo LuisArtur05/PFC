@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import FoodCard from "./FoodCard";
 
 const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onEliminar, onGuardar }) => {
-
     const [isOpen, setIsOpen] = useState(false);
 
     const close = () => {
@@ -20,7 +19,6 @@ const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onElimina
 
     return (
         <>
-            {/* Vista expandida */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -31,7 +29,6 @@ const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onElimina
                         exit={{ opacity: 0 }}
                         onClick={close}
                     >
-
                         <div
                             className="d-flex justify-content-center align-items-start pt-5 w-100 h-100"
                             onClick={(e) => e.stopPropagation()}
@@ -52,9 +49,8 @@ const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onElimina
                                     {lotesOrdenados.map((item) => (
                                         <FoodCard
                                             key={item.id_alimento}
-                                            nombre={grupoNombre}
-                                            cantidad={item.cantidad}
-                                            fecha={item.fecha_caducidad} // en formato yyyy-MM-dd
+                                            {...item}
+                                            fecha={item.fecha_caducidad}
                                             onSelect={() => onSelect(item)}
                                             isSelected={selectedItem?.id_alimento === item.id_alimento}
                                             onEliminar={() => onEliminar(item)}
@@ -62,14 +58,12 @@ const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onElimina
                                         />
                                     ))}
                                 </div>
-
                             </motion.div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            {/* Vista cerrada */}
             {!isOpen && (
                 <div className="position-relative mb-4" style={{ zIndex: 1 }}>
                     <div
@@ -78,8 +72,8 @@ const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onElimina
                         style={{ cursor: "pointer" }}
                     >
                         <FoodCard
+                            {...visibleCard}
                             nombre={grupoNombre}
-                            cantidad={visibleCard.cantidad}
                             fecha={visibleCard.fecha_caducidad}
                             onSelect={() => onSelect(visibleCard)}
                             isSelected={isOpen && selectedItem?.id_alimento === visibleCard.id_alimento}
@@ -99,13 +93,12 @@ const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onElimina
                         >
                             <FoodCard
                                 className="stacked"
+                                {...stackedCard}
                                 nombre={grupoNombre}
-                                descripcion={`Cantidad: ${stackedCard.cantidad}`}
-                                fecha={new Date(stackedCard.fecha_caducidad).toLocaleDateString("es-ES")}
+                                fecha={stackedCard.fecha_caducidad}
                                 isSelected={false}
                                 onSelect={() => { }}
                             />
-
                         </div>
                     )}
                 </div>
