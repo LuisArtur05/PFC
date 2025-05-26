@@ -2,12 +2,12 @@ import api from "./axios";
 import axios from "axios";
 
 export const getRecetasPorUsuario = async (usuarioId) => {
-    const response = await api.get(`/recetas/usuario/${usuarioId}`);
-    return response.data;
+  const response = await api.get(`/recetas/usuario/${usuarioId}`);
+  return response.data;
 };
 export const postReceta = async (receta) => {
-    const response = await api.post("recetas/CrearReceta", receta);
-    return response.data;
+  const response = await api.post("recetas/CrearReceta", receta);
+  return response.data;
 };
 
 export async function actualizarReceta(usuarioId, idReceta, recetaDTO) {
@@ -16,7 +16,7 @@ export async function actualizarReceta(usuarioId, idReceta, recetaDTO) {
 }
 
 
-export const eliminarReceta = async(receta_id)=>{
+export const eliminarReceta = async (receta_id) => {
   const response = await api.delete(`/recetas/Eliminar/${receta_id}`);
   return response.data
 };
@@ -26,7 +26,7 @@ export const generarRecetaConIA = async (alimentos) => {
   try {
     console.log("Alimentos recibidos:", alimentos);
 
-    const prompt = `Tengo estos alimentos: ${alimentos.join(", ")}. ¿Puedes darme una receta con ellos dandome el Nombre,Alimentos,Instrucciones,Tiempo de preparacion, D : ificultad:(Fácil,Media,Difícil),Precio(Valor numerico). damelo en formato json y sin responder a nada más`;
+    const prompt = `Tengo estos alimentos: ${alimentos.join(", ")}. ¿Puedes darme una receta con sentido, no hace falta que uses todos los alimentos, algo rico. dame el Nombre,Alimentos,Instrucciones,Tiempo de preparacion, D : ificultad:(Fácil,Media,Difícil),Precio(Valor numerico). damelo en formato json y sin responder a nada más`;
 
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
