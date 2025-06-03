@@ -1,5 +1,7 @@
 package miapi.Service;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +13,7 @@ import miapi.Tables.Usuario;
 @RequiredArgsConstructor
 public class UsuarioService {
     private final UsuarioDAO usuarioDAO;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void createUsuario(Usuario usuario) {
         System.out.println("Se ha creado un usuario");
@@ -18,9 +21,19 @@ public class UsuarioService {
     }
 
     public Integer getIDByEmailAndPassword(String email, String password) {
-        return usuarioDAO.findByEmailAndPassword(email, password)
-                .map(Usuario::getId_usuario)
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ese email y contraseña"));
+        Usuario usuario = usuarioDAO.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ese email"));
+
+        String hashedPassword = usuario.getPassword();
+
+        // Compara password plano con hash
+        boolean passwordMatches = BCrypt.checkpw(password, hashedPassword);
+
+        if (passwordMatches) {
+            return usuario.getId_usuario();
+        } else {
+            throw new EntityNotFoundException("Contraseña incorrecta");
+        }
     }
-    
+
 }

@@ -15,6 +15,7 @@ import {
 } from "../services/alimentosService";
 import { getCategorias } from "../services/categoriasService";
 import { generarPegatinas } from "../components/GenerarPegatinas";
+import { Informe } from "../components/Informe";
 
 export default function Dashboard() {
     const [alimentos, setAlimentos] = useState([]);
@@ -209,7 +210,8 @@ export default function Dashboard() {
                         {ubicaciones.map(renderUbicacion)}
                     </div>
 
-                    <FooterBar onDownloadClick={() => generarPegatinas(alimentos)} />
+                    {/*<FooterBar onDownloadClick={() => generarPegatinas(alimentos)}>*/}
+                    <FooterBar onDownloadClick={() => Informe(alimentos)} />
                 </div>
             </div>
         </div>

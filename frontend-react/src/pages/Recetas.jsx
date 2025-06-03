@@ -20,11 +20,7 @@ const Recetas = () => {
       try {
         const data = await getRecetasPorUsuario(usuarioId);
 
-        // Opcional: Añadir campo id para facilitar uso en componentes
-        // const recetasConId = data.map(r => ({ ...r, id: r.id_receta }));
-        // setRecetas(recetasConId);
-
-        // O usar directamente id_receta en todo el código
+    
         setRecetas(data);
       } catch (error) {
         console.error("Error al obtener recetas:", error);
