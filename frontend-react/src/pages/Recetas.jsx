@@ -5,7 +5,7 @@ import HeaderRecetas from "../components/HeaderRecetas";
 import RecetaCard from "../components/RecetaCard";
 import AddRecetaForm from "../components/AddRecetaForm";
 import { Collapse } from "react-bootstrap";
-import { getRecetasPorUsuario, eliminarReceta, actualizarReceta } from "../services/RecetasService";
+import { getRecetasPorUsuario, eliminarReceta, actualizarReceta } from "../services/recetasService";
 
 const Recetas = () => {
   const [recetas, setRecetas] = useState([]);

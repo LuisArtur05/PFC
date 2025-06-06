@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import { autoTable } from "jspdf-autotable";
+import "jspdf-autotable";
 
 // Función auxiliar para convertir imagen a base64
 async function loadImageAsBase64(url) {
@@ -63,7 +63,7 @@ export async function Informe(alimentos) {
 
       const offsetY = index === 0 ? 50 : doc.lastAutoTable.finalY + 10;
 
-      autoTable(doc, {
+      doc.autoTable({
         head: headers,
         body: rows,
         foot: [footer],

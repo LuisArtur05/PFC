@@ -47,3 +47,14 @@
 #dropdown-custom-add::after {
   display: none !important;
 }
+
+.popover-con-flecha::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent white transparent transparent;
+  z-index: 2001;
+}

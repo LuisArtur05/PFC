@@ -1,5 +1,4 @@
 import api from "./axios";
-import axios from "axios";
 
 export const getAlimentoPorId = async () => {
     const response = await api.get(`/alimento/BuscarAlimento/${id}`);
@@ -41,12 +40,12 @@ export const actualizarAlimento = async (id_alimento, usuario_id, alimentoActual
     return response.data;
 };
 
-export const actualizarNevera_A_Lista = async (id_usuario,id_alimento) => {
+export const actualizarNevera_A_Lista = async (id_usuario, id_alimento) => {
     const response = await api.put(`/alimento/cambiarNeveraALista/${id_usuario}/${id_alimento}`);
     return response.data;
 };
 
-export const actualizarLista_A_Nevera = async (id_usuario,id_alimento) => {
+export const actualizarLista_A_Nevera = async (id_usuario, id_alimento) => {
     const response = await api.put(`/alimento/cambiarListaANevera/${id_usuario}/${id_alimento}`);
     return response.data;
 };
@@ -55,7 +54,7 @@ export const getNombresAlimentosSinCaducar = async (usuarioId) => {
     return response.data;
 };
 
-export const getPrecioUbicacion =async (usuarioId) => {
+export const getPrecioUbicacion = async (usuarioId) => {
     const response = await api.get(`/alimento/PrecioPorUbicacion/${usuarioId}`)
     return response.data;
 }

@@ -15,7 +15,9 @@ export default function FoodCard({
   isSelected,
   className = '',
   onGuardar,
-  onEliminar
+  onEliminar,
+  onColocarClick,
+  onRefrescar = () => { }
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedNombre, setEditedNombre] = useState(nombre || "");
@@ -99,6 +101,7 @@ export default function FoodCard({
     const usuarioId = parseInt(localStorage.getItem("usuarioId"));
     await actualizarNevera_A_Lista(usuarioId, id_alimento);
     setShowModal(false);
+    onRefrescar();
   };
 
   return (
@@ -181,7 +184,15 @@ export default function FoodCard({
                 </p>
               )}
 
-              {isSelected && (
+              {ubicacion === "Pendiente" && onColocarClick && (
+                <div className="mt-3 d-flex justify-content-center">
+                  <button className="btn btn-outline-success btn-sm" onClick={(e) => { e.stopPropagation(); onColocarClick(); }}>
+                    Colocar
+                  </button>
+                </div>
+              )}
+
+              {isSelected && ubicacion !== "Pendiente" && (
                 <div className="mt-3 d-flex gap-2 justify-content-center">
                   <button className="btn btn-outline-primary btn-sm" onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}>Editar</button>
                   <button className="btn btn-outline-danger btn-sm" onClick={handleEliminarClick}>Eliminar</button>
