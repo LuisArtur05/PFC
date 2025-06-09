@@ -1,0 +1,41 @@
+.burguer-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: #f4f4f4;
+    padding: 1rem 0.5rem;
+    transition: width 0.3s ease;
+    width: 60px;
+    z-index: 1050;
+}
+
+.burguer-sidebar:hover {
+    width: 180px;
+    align-items: flex-start;
+    padding-left: 1rem;
+}
+
+.nav-icon {
+    display: flex;
+    align-items: center;
+    color: #333;
+    text-decoration: none;
+    margin: 1rem 0;
+    gap: 0.8rem;
+    white-space: nowrap;
+    transition: color 0.2s;
+}
+
+.nav-icon span {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.burguer-sidebar:hover .nav-icon span {
+    opacity: 1;
+}
+
+.nav-icon:hover {
+    color: var(--verde-cooled);
+}

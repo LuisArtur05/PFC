@@ -1,6 +1,6 @@
 import api from "./axios";
 
-export const getAlimentoPorId = async () => {
+export const getAlimentoPorId = async (id) => {
     const response = await api.get(`/alimento/BuscarAlimento/${id}`);
     return response.data;
 };

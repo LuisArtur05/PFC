@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import miapi.Config.Ubicacion;
 import miapi.DAO.AlimentoDAO;
 import miapi.DAO.CategoriaDAO;
 import miapi.DAO.UsuarioDAO;
@@ -110,6 +111,11 @@ public class AlimentoService {
 
         if (dto.getProveedor() != null)
             alimento.setProveedor(dto.getProveedor());
+
+        if (dto.getLista_active() != null)
+            alimento.setLista_active(dto.getLista_active());
+        if (dto.getNevera_active() != null)
+            alimento.setNevera_active(dto.getNevera_active());
 
         // NO modificar el usuario ni el id_alimento
         return alimentoDAO.save(alimento);
@@ -230,6 +236,7 @@ public class AlimentoService {
 
         alimento.setLista_active(0);
         alimento.setNevera_active(1);
+        alimento.setUbicacion(Ubicacion.Pendiente);
 
         alimentoDAO.save(alimento);
     }

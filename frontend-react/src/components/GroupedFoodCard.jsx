@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import FoodCard from "./FoodCard";
 
-const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onEliminar, onGuardar }) => {
+const GroupedFoodCard = ({
+    grupoNombre,
+    lotes,
+    onSelect,
+    selectedItem,
+    onEliminar,
+    onGuardar,
+    categoriaMap,
+}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const close = () => {
@@ -51,10 +59,13 @@ const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onElimina
                                             key={item.id_alimento}
                                             {...item}
                                             fecha={item.fecha_caducidad}
+                                            categoriaNombre={categoriaMap[item.categoria_id]} // ✅ Imagen por categoría
                                             onSelect={() => onSelect(item)}
                                             isSelected={selectedItem?.id_alimento === item.id_alimento}
                                             onEliminar={() => onEliminar(item)}
-                                            onGuardar={(alimentoEditado) => onGuardar(item, alimentoEditado)}
+                                            onGuardar={(alimentoEditado) =>
+                                                onGuardar(item, alimentoEditado)
+                                            }
                                         />
                                     ))}
                                 </div>
@@ -75,8 +86,11 @@ const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onElimina
                             {...visibleCard}
                             nombre={grupoNombre}
                             fecha={visibleCard.fecha_caducidad}
+                            categoriaNombre={categoriaMap[visibleCard.categoria_id]} // ✅
                             onSelect={() => onSelect(visibleCard)}
-                            isSelected={isOpen && selectedItem?.id_alimento === visibleCard.id_alimento}
+                            isSelected={
+                                isOpen && selectedItem?.id_alimento === visibleCard.id_alimento
+                            }
                         />
                     </div>
 
@@ -96,6 +110,7 @@ const GroupedFoodCard = ({ grupoNombre, lotes, onSelect, selectedItem, onElimina
                                 {...stackedCard}
                                 nombre={grupoNombre}
                                 fecha={stackedCard.fecha_caducidad}
+                                categoriaNombre={categoriaMap[stackedCard.categoria_id]} // ✅
                                 isSelected={false}
                                 onSelect={() => { }}
                             />

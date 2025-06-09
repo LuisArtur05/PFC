@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
-// Función auxiliar para convertir imagen a base64
+// Convertir imagen a base64
 async function loadImageAsBase64(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -19,66 +19,68 @@ async function loadImageAsBase64(url) {
   });
 }
 
-// Función principal para generar el PDF
 export async function Informe(alimentos) {
   const doc = new jsPDF();
 
-  // Cargar imagen del logo
-  const imageBase64 = await loadImageAsBase64("/IMG_COOLED_CUT.PNG");
+  // Cargar imagen
+  const imageBase64 = await loadImageAsBase64("/img/Logotipo_COOLED.png");
 
-  // Calcular posición centrada
+  // Crear imagen HTML para conocer dimensiones reales
+  const tempImg = new Image();
+  tempImg.src = imageBase64;
+  await new Promise((resolve) => tempImg.onload = resolve);
+
+  // Calcular proporción de la imagen
   const pageWidth = doc.internal.pageSize.getWidth();
-  const imageWidth = 50;
-  const imageX = (pageWidth - imageWidth) / 2;
+  const maxWidth = 50;
+  const width = maxWidth;
+  const height = maxWidth * (tempImg.height / tempImg.width);
+  const x = (pageWidth - width) / 2;
 
-  // Añadir imagen
-  doc.addImage(imageBase64, 'PNG', imageX, 10, imageWidth, 30);
+  doc.addImage(imageBase64, "PNG", x, 10, width, height);
 
   const headers = [
     ["Nombre", "Fecha de Caducidad", "Cantidad", "Precio (€)", "Proveedor", "Ubicación"]
   ];
 
   const ubicaciones = ["Frigorifico", "Congelador", "Despensa"];
+  let lastY = 10 + height + 10;
 
-  ubicaciones.forEach((ubicacion, index) => {
-    const alimentosFiltrados = alimentos.filter(a => a.ubicacion === ubicacion);
+  for (const ubicacion of ubicaciones) {
+    const filtrados = alimentos.filter(a => a.ubicacion === ubicacion);
+    if (filtrados.length === 0) continue;
 
-    if (alimentosFiltrados.length > 0) {
-      const sumatorio = alimentosFiltrados.reduce((acc, a) => acc + a.precio, 0);
+    const total = filtrados.reduce((acc, a) => acc + (a.precio || 0), 0);
 
-      const rows = alimentosFiltrados.map(a => [
-        a.nombre,
-        a.fecha_caducidad,
-        a.cantidad,
-        a.precio,
-        a.proveedor,
-        a.ubicacion
-      ]);
+    const rows = filtrados.map(a => [
+      a.nombre || "-",
+      new Date(a.fecha_caducidad).toLocaleDateString("es-ES"),
+      a.cantidad || 0,
+      a.precio?.toFixed(2) || "0.00",
+      a.proveedor || "-",
+      a.ubicacion || "-"
+    ]);
 
-      const footer = [{
-        content: `Valor total de alimentos en ${ubicacion}: ${sumatorio.toFixed(2)} €`,
-        colSpan: 6,
-        styles: { halign: 'left' }
-      }];
-
-      const offsetY = index === 0 ? 50 : doc.lastAutoTable.finalY + 10;
-
-      doc.autoTable({
-        head: headers,
-        body: rows,
-        foot: [footer],
-        startY: offsetY + 5,
-        theme: 'grid',
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [22, 160, 133] },
-        footStyles: {
-          fontStyle: 'bold',
-          textColor: [255, 255, 255],
-          fillColor: [22, 160, 133]
+    autoTable(doc, {
+      head: headers,
+      body: rows,
+      foot: [[
+        {
+          content: `Valor total en ${ubicacion}: ${total.toFixed(2)} €`,
+          colSpan: 6,
+          styles: { halign: 'left' }
         }
-      });
-    }
-  });
+      ]],
+      startY: lastY + 10,
+      theme: 'grid',
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [22, 160, 133] },
+      footStyles: { fillColor: [22, 160, 133], textColor: 255, fontStyle: 'bold' },
+      didDrawPage: (data) => {
+        lastY = data.cursor.y;
+      }
+    });
+  }
 
   doc.save("alimentos.pdf");
 }

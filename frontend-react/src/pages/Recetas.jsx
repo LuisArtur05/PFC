@@ -20,7 +20,7 @@ const Recetas = () => {
       try {
         const data = await getRecetasPorUsuario(usuarioId);
 
-    
+
         setRecetas(data);
       } catch (error) {
         console.error("Error al obtener recetas:", error);

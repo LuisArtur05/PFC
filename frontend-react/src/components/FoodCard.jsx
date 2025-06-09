@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Alert, Badge, Modal, Button, Row, Col } from "react-bootstrap";
 import './FoodCard.css';
 import { actualizarNevera_A_Lista } from '../services/alimentosService';
@@ -11,6 +11,7 @@ export default function FoodCard({
   precio,
   proveedor,
   ubicacion,
+  categoriaNombre,
   onSelect,
   isSelected,
   className = '',
@@ -44,16 +45,39 @@ export default function FoodCard({
   }
 
   const cardStyle = isCaducado
-    ? "border-danger bg-light"
+    ? "border border-2 border-danger bg-light"
     : porCaducar
-      ? "border-warning bg-light"
-      : "border-success bg-white";
+      ? "border border-2 border-warning bg-light"
+      : "border border-2 border-success bg-white";
 
   const badge = isCaducado
     ? <Badge bg="danger">CADUCADO</Badge>
     : porCaducar
       ? <Badge bg="warning" text="dark">PRONTO</Badge>
       : <Badge bg="success">OK</Badge>;
+
+  const imagenCategoria = useMemo(() => {
+    const mapa = {
+      Fruta: "fruta.png",
+      Verdura: "verdura.png",
+      Carne: "carne.png",
+      Pescado: "pescado.png",
+      Lácteos: "lacteos.png",
+      Huevos: "huevos.png",
+      Pan: "pan.png",
+      Congelados: "congelados.png",
+      "Comida Preparada": "comida_preparada.png",
+      Conservas: "conservas.png",
+      Bebidas: "bebidas.png",
+      Dulces: "dulces.png",
+      Cereales: "cereales.png",
+      "Frutos Secos": "frutos_secos.png"
+    };
+
+    const nombreLimpio = (categoriaNombre || "").trim();
+    const filename = mapa[nombreLimpio] || "default.png";
+    return `/assets/categorias/${filename}`;
+  }, [categoriaNombre]);
 
   const handleSave = () => {
     if (!editedNombre.trim()) {
@@ -90,11 +114,7 @@ export default function FoodCard({
 
   const handleEliminarClick = (e) => {
     e.stopPropagation();
-    if (isCaducado) {
-      setShowModal(true);
-    } else {
-      onEliminar && onEliminar();
-    }
+    setShowModal(true);
   };
 
   const handleMoverALista = async () => {
@@ -160,9 +180,22 @@ export default function FoodCard({
             </div>
           ) : (
             <>
-              <div className="d-flex justify-content-between align-items-start mb-2">
-                <h5 className="card-title">{nombre}</h5>
-                {badge}
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <div className="d-flex flex-column">
+                  <h5 className="card-title mb-1">{nombre}</h5>
+                  {badge}
+                </div>
+                <img
+                  src={imagenCategoria}
+                  alt={categoriaNombre}
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    marginLeft: "10px",
+                    objectFit: "contain",
+                    flexShrink: 0
+                  }}
+                />
               </div>
 
               <Row>
@@ -205,17 +238,21 @@ export default function FoodCard({
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Alimento caducado</Modal.Title>
+          <Modal.Title>
+            {isCaducado ? "Alimento caducado" : "Eliminar alimento"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          ¿Deseas mover este alimento a la lista de la compra?
+          {isCaducado
+            ? "¿Deseas mover este alimento a la lista de la compra?"
+            : "¿Quieres moverlo a la lista de la compra antes de eliminarlo?"}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => { setShowModal(false); onEliminar(); }}>
             No, eliminar
           </Button>
           <Button variant="success" onClick={handleMoverALista}>
-            Sí, mover a lista
+            {isCaducado ? "Sí, mover a lista" : "Sí, mover a la lista"}
           </Button>
         </Modal.Footer>
       </Modal>

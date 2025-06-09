@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: var(--gris-fondo);
 }
 
 .logo {
@@ -13,7 +14,7 @@
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em var(--verde-cooled));
 }
 
 .logo.react:hover {
@@ -37,11 +38,17 @@
 }
 
 .card {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 2em;
+  margin-bottom: 1rem;
 }
+
 
 .read-the-docs {
   color: #888;
+  font-style: italic;
 }
 
 #dropdown-custom-add::after {

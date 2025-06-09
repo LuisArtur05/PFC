@@ -4,7 +4,7 @@ import SideBar from "../components/SideBar";
 import BurguerMenu from "../components/BurguerMenu";
 import { Collapse, Form, Button } from "react-bootstrap";
 import { getNombresAlimentosSinCaducar } from "../services/alimentosService";
-import { generarRecetaConIA, postReceta } from "../services/RecetasService";
+import { generarRecetaConIA, postReceta } from "../services/recetasService";
 import AddButton from "../components/AddButton";
 import ReturnButton from "../components/ReturnButton";
 

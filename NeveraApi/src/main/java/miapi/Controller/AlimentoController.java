@@ -122,7 +122,7 @@ public class AlimentoController {
                                           "nombre": "Leche Desnatada",
                                           "fecha_caducidad": "2025-05-10",
                                           "cantidad": 3,
-                                          "ubicacion": "Frigorifico"
+                                          "ubicacion": "Frigorifico",
                                           "precio": 3,
                                           "proveedor": "Mercadona"
                                         }

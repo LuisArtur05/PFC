@@ -5,11 +5,10 @@ import axios from "axios";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // para redireccionar
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axios.post("http://localhost:8080/usuario/getID", {
         email,
@@ -17,11 +16,7 @@ const Login = () => {
       });
 
       const userId = response.data;
-
-      // Guardar el ID en localStorage
       localStorage.setItem("usuarioId", userId);
-
-      // Redirigir al dashboard u otra página
       navigate("/nevera");
 
     } catch (error) {
@@ -31,9 +26,24 @@ const Login = () => {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-      <div className="card p-4" style={{ minWidth: "500px", width: "100%" }}>
-        <h3 className="mb-4 text-center">Iniciar sesión</h3>
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: '100vh', backgroundColor: 'var(--gris-fondo)' }}
+    >
+      <div
+        className="card shadow p-4 border-0"
+        style={{ minWidth: "400px", width: "90%", maxWidth: "500px", borderRadius: "1rem" }}
+      >
+        {/* Logotipo COOLED */}
+        <div className="text-center mb-3">
+          <img
+            src="/img/Logotipo_COOLED.png"
+            alt="Logo COOLED"
+            style={{ width: "180px", marginBottom: "0.5rem" }}
+          />
+        </div>
+
+        <h5 className="text-center mb-4">Iniciar sesión</h5>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -48,7 +58,7 @@ const Login = () => {
             />
           </div>
 
-          <div className="">
+          <div className="mb-3">
             <label htmlFor="password" className="form-label">Contraseña</label>
             <input
               type="password"
@@ -60,15 +70,37 @@ const Login = () => {
             />
           </div>
 
-          <div className="mt text-end mb-3">
-            <small><Link to="/forgot-password">¿Olvidaste tu contraseña?</Link></small>
+          <div className="text-end mb-3">
+            <small>
+              <Link to="/forgot-password" style={{ color: "var(--verde-cooled)" }}>
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </small>
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">Entrar</button>
+          <button
+            type="submit"
+            className="w-100"
+            style={{
+              backgroundColor: "var(--verde-cooled)",
+              border: "none",
+              padding: "0.75em",
+              borderRadius: "8px",
+              fontWeight: 600,
+              color: "white"
+            }}
+          >
+            Entrar
+          </button>
         </form>
 
         <div className="mt-3 text-center">
-          <small>¿No tienes cuenta? <Link to="/crear-cuenta">Regístrate</Link></small>
+          <small>
+            ¿No tienes cuenta?{" "}
+            <Link to="/crear-cuenta" style={{ color: "var(--verde-cooled)" }}>
+              Regístrate
+            </Link>
+          </small>
         </div>
       </div>
     </div>

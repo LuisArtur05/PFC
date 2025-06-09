@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import COOLEDButton from "../components/COOLEDButton";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -17,9 +18,18 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-      <div className="card p-4" style={{ minWidth: "500px", width: "100%" }}>
-        <h3 className="mb-4 text-center">Recuperar Contraseña</h3>
+    <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh", backgroundColor: "var(--gris-fondo)" }}>
+      <div className="card shadow p-4 border-0" style={{ minWidth: "400px", width: "90%", maxWidth: "500px", borderRadius: "1rem" }}>
+        {/* Logo COOLED */}
+        <div className="text-center mb-3">
+          <img
+            src="/img/Logotipo_COOLED.png"
+            alt="Logo COOLED"
+            style={{ width: "180px", marginBottom: "0.5rem" }}
+          />
+        </div>
+
+        <h5 className="text-center mb-4">Recuperar Contraseña</h5>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -34,10 +44,14 @@ const ForgotPassword = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">Enviar enlace</button>
+          <COOLEDButton type="submit">Enviar enlace</COOLEDButton>
         </form>
 
-        {status && <div className="mt-3 text-center text-info">{status}</div>}
+        {status && (
+          <div className="mt-3 text-center" style={{ color: "var(--verde-cooled)", fontWeight: "500" }}>
+            {status}
+          </div>
+        )}
       </div>
     </div>
   );

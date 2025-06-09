@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
+import COOLEDButton from "../components/COOLEDButton";
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -20,15 +21,12 @@ export default function ResetPassword() {
     }
 
     try {
-
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(nuevaPassword, salt);
 
       const res = await fetch(`http://localhost:8080/usuario/restablecer-password?token=${token}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nuevaPassword: hashedPassword }),
       });
 
@@ -46,9 +44,18 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-      <div className="card p-4" style={{ minWidth: "500px", width: "100%" }}>
-        <h3 className="mb-4 text-center">Restablecer Contraseña</h3>
+    <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh', backgroundColor: 'var(--gris-fondo)' }}>
+      <div className="card shadow p-4 border-0" style={{ minWidth: "400px", width: "90%", maxWidth: "500px", borderRadius: "1rem" }}>
+        {/* Logotipo COOLED */}
+        <div className="text-center mb-3">
+          <img
+            src="/img/Logotipo_COOLED.png"
+            alt="Logo COOLED"
+            style={{ width: "180px", marginBottom: "0.5rem" }}
+          />
+        </div>
+
+        <h5 className="text-center mb-4">Restablecer Contraseña</h5>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -75,10 +82,14 @@ export default function ResetPassword() {
             />
           </div>
 
-          <button type="submit" className="btn btn-success w-100">Actualizar</button>
+          <COOLEDButton type="submit">Actualizar</COOLEDButton>
         </form>
 
-        {mensaje && <div className="mt-3 text-center text-info">{mensaje}</div>}
+        {mensaje && (
+          <div className="mt-3 text-center" style={{ color: "var(--verde-cooled)", fontWeight: "500" }}>
+            {mensaje}
+          </div>
+        )}
       </div>
     </div>
   );
