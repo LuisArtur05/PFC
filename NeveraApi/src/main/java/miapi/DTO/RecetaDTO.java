@@ -20,6 +20,7 @@ public class RecetaDTO {
     private Float tiempo_preparacion;
     private Dificultad dificultad;
     private Float precio;
+    private String ingredientes;
     
 
 

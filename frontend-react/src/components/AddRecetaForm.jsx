@@ -1,99 +1,72 @@
 import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
 
-const AddRecetaForm = ({ onCancel }) => {
-    const [nombre, setNombre] = useState("");
-    const [ingredientes, setIngredientes] = useState("");
-    const [instrucciones, setInstrucciones] = useState("");
-    const [tiempoPreparacion, setTiempoPreparacion] = useState("");
-    const [dificultad, setDificultad] = useState("");
-    const [precio, setPrecio] = useState("");
+const AddRecetaForm = ({ onAdd, onCancel }) => {
+  const [nombre, setNombre] = useState("");
+  const [instrucciones, setInstrucciones] = useState("");
+  const [tiempoPreparacion, setTiempoPreparacion] = useState("");
+  const [dificultad, setDificultad] = useState("Fácil");
+  const [precio, setPrecio] = useState("");
+  const [ingredientes, setIngredientes] = useState("");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const nuevaReceta = {
-            nombre,
-            ingredientes,
-            instrucciones,
-            tiempoPreparacion,
-            dificultad,
-            precio,
-        };
-        console.log("Nueva Receta:", nuevaReceta);
-        // Aquí podrías hacer un POST al backend
-        onCancel();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const nuevaReceta = {
+      nombre,
+      instrucciones,
+      tiempo_preparacion: parseInt(tiempoPreparacion),
+      dificultad,
+      precio: parseFloat(precio),
+      ingredientes,
     };
 
-    return (
-        <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formNombreReceta">
-                <Form.Label>Nombre de la receta</Form.Label>
-                <Form.Control
-                    type="text"
-                    placeholder="Ej: Ensalada César"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    required
-                />
-            </Form.Group>
+    onAdd(nuevaReceta);
+  };
 
+  return (
+    <form onSubmit={handleSubmit}>
+      <h4>Nueva Receta</h4>
 
-            <Form.Group className="mb-3" controlId="formInstrucciones">
-                <Form.Label>Instrucciones</Form.Label>
-                <Form.Control
-                    as="textarea"
-                    placeholder="Describe los pasos de la receta"
-                    value={instrucciones}
-                    onChange={(e) => setInstrucciones(e.target.value)}
-                    rows={3}
-                    required
-                />
-            </Form.Group>
+      <div className="mb-3">
+        <label>Nombre</label>
+        <input className="form-control" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+      </div>
 
-            <Form.Group className="mb-3" controlId="formTiempoPreparacion">
-                <Form.Label>Tiempo de preparación (minutos)</Form.Label>
-                <Form.Control
-                    type="number"
-                    placeholder="Ej: 20"
-                    value={tiempoPreparacion}
-                    onChange={(e) => setTiempoPreparacion(e.target.value)}
-                    required
-                />
-            </Form.Group>
+      <div className="mb-3">
+        <label>Instrucciones</label>
+        <textarea className="form-control" value={instrucciones} onChange={(e) => setInstrucciones(e.target.value)} required />
+      </div>
 
-            <Form.Group className="mb-3" controlId="formDificultad">
-                <Form.Label>Dificultad</Form.Label>
-                <Form.Select
-                    value={dificultad}
-                    onChange={(e) => setDificultad(e.target.value)}
-                    required
-                >
-                    <option value="">Selecciona una dificultad</option>
-                    <option value="Fácil">Fácil</option>
-                    <option value="Media">Media</option>
-                    <option value="Difícil">Difícil</option>
-                </Form.Select>
-            </Form.Group>
+      <div className="mb-3">
+        <label>Tiempo de preparación (minutos)</label>
+        <input type="number" className="form-control" value={tiempoPreparacion} onChange={(e) => setTiempoPreparacion(e.target.value)} required />
+      </div>
 
-            <Form.Group className="mb-3" controlId="formPrecio">
-                <Form.Label>Precio(€)</Form.Label>
-                <Form.Control
-                    type="number"
-                    placeholder="Ej: 12.50"
-                    value={precio}
-                    onChange={(e) => setPrecio(e.target.value)}
-                    min="0"
-                    step="0.01"
-                    required
-                />
-            </Form.Group>
+      <div className="mb-3">
+        <label>Dificultad</label>
+        <select className="form-control" value={dificultad} onChange={(e) => setDificultad(e.target.value)}>
+          <option>Fácil</option>
+          <option>Media</option>
+          <option>Difícil</option>
+        </select>
+      </div>
 
-            <div className="d-flex justify-content-end gap-2">
-                <Button variant="secondary" onClick={onCancel}>Cancelar</Button>
-                <Button type="submit" variant="success">Guardar</Button>
-            </div>
-        </Form>
-    );
+      <div className="mb-3">
+        <label>Precio (€)</label>
+        <input type="number" step="0.01" className="form-control" value={precio} onChange={(e) => setPrecio(e.target.value)} required />
+      </div>
+
+      <div className="mb-3">
+        <label>Ingredientes </label>
+        <input className="form-control" value={ingredientes} onChange={(e) => setIngredientes(e.target.value)} required />
+      </div>
+
+      <div className="d-flex justify-content-end">
+        <button type="button" className="btn btn-secondary me-2" onClick={onCancel}>Cancelar</button>
+        <button type="submit" className="btn btn-primary">Guardar</button>
+      </div>
+    </form>
+  );
 };
 
 export default AddRecetaForm;

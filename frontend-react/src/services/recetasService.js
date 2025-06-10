@@ -26,7 +26,7 @@ export const generarRecetaConIA = async (alimentos) => {
   try {
     console.log("Alimentos recibidos:", alimentos);
 
-    const prompt = `Tengo estos alimentos: ${alimentos.join(", ")}. ¿Puedes darme una receta con sentido, no hace falta que uses todos los alimentos, algo rico. dame el Nombre,Alimentos,Instrucciones,Tiempo de preparacion, D : ificultad:(Fácil,Media,Difícil),Precio(Valor numerico). damelo en formato json y sin responder a nada más`;
+    const prompt = `Tengo estos alimentos: ${alimentos.join(", ")}. ¿Puedes darme una receta con sentido, no hace falta que uses todos los alimentos, un plato con nombre. dame el Nombre,Alimentos,Instrucciones,Tiempo de preparacion,Dificultad:(Fácil,Media,Difícil),Precio(Valor numerico),Ingredientes. damelo en formato json y sin responder a nada más`;
 
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
@@ -36,7 +36,7 @@ export const generarRecetaConIA = async (alimentos) => {
       },
       {
         headers: {
-          Authorization: "Bearer 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",
+          Authorization: "Bearer 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",
           "Content-Type": "application/json",
         },
       }

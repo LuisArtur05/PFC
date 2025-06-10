@@ -198,17 +198,15 @@ public class AlimentoController {
         @GetMapping("/BuscarNombresAlimentosSinCaducar/{usuarioId}")
         @Operation(summary = "Nombres de alimentos sin caducar por ID de usuario", description = "Devuelve solo los nombres de los alimentos cuya fecha de caducidad es mayor que la actual")
         @ApiResponses({
-                        @ApiResponse(responseCode = "200", description = "Nombres encontrados"),
-                        @ApiResponse(responseCode = "404", description = "No se encontraron alimentos válidos o usuario no existe"),
+                        @ApiResponse(responseCode = "200", description = "Nombres encontrados (puede ser una lista vacía)"),
+                        @ApiResponse(responseCode = "404", description = "Usuario no existe"),
         })
         public ResponseEntity<List<String>> obtenerNombresAlimentosSinCaducar(@PathVariable Integer usuarioId) {
                 List<String> nombres = alimentoService.obtenerNombresAlimentosSinCaducarPorUsuario(usuarioId);
 
-                if (nombres.isEmpty()) {
-                        return ResponseEntity.notFound().build();
-                }
-
-                return ResponseEntity.ok(nombres);
+                // Suponiendo que si el usuario no existe se lanza una excepción o se maneja de
+                // otra forma en el servicio.
+                return ResponseEntity.ok(nombres); // Devuelve 200 con lista vacía si no hay alimentos
         }
 
         @PutMapping("/cambiarNeveraALista/{usuarioId}/{alimentoId}")

@@ -37,7 +37,8 @@ public ResponseEntity<Receta> crearReceta(
                   "instrucciones": "Batir los huevos, freír las patatas, mezclar todo y cocinar.",
                   "tiempo_preparacion": 30.0,
                   "dificultad": "Media",
-                  "precio": 5.5
+                  "precio": 5.5,
+                  "ingredientes": "Huevos,aceite,patatas"
                 }
                 """))) @org.springframework.web.bind.annotation.RequestBody RecetaDTO recetaDTO) {
 
@@ -77,7 +78,8 @@ public ResponseEntity<Receta> crearReceta(
                           "instrucciones": "Batir bien los huevos, freír las patatas más crujientes, mezclar y cocinar.",
                           "tiempo_preparacion": 25.0,
                           "dificultad": "Media",
-                          "precio": 6.0
+                          "precio": 6.0,
+                          "ingredientes": "Huevos,aceite,patatas"
                         }
                         """))) @org.springframework.web.bind.annotation.RequestBody RecetaDTO recetaDTO) {
 

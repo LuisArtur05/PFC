@@ -37,5 +37,8 @@ public class Receta {
     @Column(name="precio",nullable = false)
     private Float precio;
 
+    @Column(name = "ingredientes", nullable = false)
+    private String ingredientes;
+
     
 }

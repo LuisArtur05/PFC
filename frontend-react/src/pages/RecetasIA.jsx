@@ -26,7 +26,7 @@ const RecetasIA = () => {
     const handleAddClick = () => {
         if (recetaParseada) {
             setNombre(recetaParseada.nombre);
-            setIngredientes(recetaParseada.alimentos.join(", "));
+            setIngredientes(recetaParseada.ingredientes);
             setInstrucciones(recetaParseada.instrucciones);
             setTiempo(recetaParseada.tiempo);
             setDificultad(recetaParseada.dificultad);
@@ -38,7 +38,7 @@ const RecetasIA = () => {
     const handleCancelForm = () => setShowForm(false);
 
     const handleReturnClick = () => {
-        console.log("Regresando...");
+        navigate(-1);
     };
 
     const handleSubmit = async (e) => {
@@ -57,7 +57,9 @@ const RecetasIA = () => {
             tiempo_preparacion: parseFloat(tiempo) || 0,
             dificultad,
             precio: parseFloat(precio) || 0,
+            ingredientes,
         };
+        console.log("Receta a enviar a postReceta:", receta);
 
         try {
             await postReceta(receta);
@@ -77,12 +79,20 @@ const RecetasIA = () => {
             setLoading(true);
             try {
                 const alimentos = await getNombresAlimentosSinCaducar(usuarioId);
+
+                if (!alimentos || alimentos.length === 0) {
+                    setRecetaIA("NO_ALIMENTOS");
+                    setRecetaParseada(null);
+                    return;
+                }
+
                 const receta = await generarRecetaConIA(alimentos);
+                console.log(receta)
                 setRecetaIA(receta);
                 setRecetaParseada(parseJSONReceta(receta));
             } catch (error) {
                 console.error("Error generando receta con IA:", error);
-                setRecetaIA("Hubo un problema generando la receta.");
+                setRecetaIA("ERROR_IA");
                 setRecetaParseada(null);
             } finally {
                 setLoading(false);
@@ -105,6 +115,9 @@ const RecetasIA = () => {
 
             return {
                 nombre: receta.Nombre || "",
+                ingredientes: Array.isArray(receta.Ingredientes)
+                    ? receta.Ingredientes.join(", ")
+                    : receta.Ingredientes || "",
                 alimentos: receta.Alimentos || [],
                 instrucciones: Array.isArray(receta.Instrucciones)
                     ? receta.Instrucciones.join("\n")
@@ -243,28 +256,37 @@ const RecetasIA = () => {
                                 <p>Cargando receta con tus alimentos...</p>
                             ) : (
                                 <>
-                                    {recetaParseada ? (
+                                    {recetaIA === "NO_ALIMENTOS" ? (
+                                        <>
+                                            <p>Necesitas tener alimentos sin caducar en tu nevera para generar una receta recomendada.</p>
+                                            <div className="d-flex justify-content-center mt-4">
+                                                <ReturnButton onClick={handleReturnClick} />
+                                            </div>
+                                        </>
+                                    ) : recetaParseada ? (
                                         <div>
                                             <p><strong>Nombre:</strong> {recetaParseada.nombre}</p>
-                                            <p><strong>Alimentos:</strong> {recetaParseada.alimentos.join(", ")}</p>
+                                            <p><strong>Ingredientes:</strong> {recetaParseada.ingredientes}</p>
                                             <p><strong>Instrucciones:</strong><br />{recetaParseada.instrucciones}</p>
                                             <p><strong>Tiempo de preparación:</strong> {recetaParseada.tiempo}</p>
                                             <p><strong>Dificultad:</strong> {recetaParseada.dificultad}</p>
                                             {recetaParseada.precio && (
                                                 <p><strong>Precio:</strong> {recetaParseada.precio}€</p>
                                             )}
+                                            <div className="d-flex justify-content-center gap-3 mt-4">
+                                                <AddButton onClick={handleAddClick} />
+                                                <ReturnButton onClick={handleReturnClick} />
+                                            </div>
                                         </div>
                                     ) : (
-                                        <p>Error al interpretar la respuesta.</p>
+                                        <>
+                                            <p>Error de conexion.</p>
+                                            <div className="d-flex justify-content-center mt-4">
+                                                <ReturnButton onClick={handleReturnClick} />
+                                            </div>
+                                        </>
                                     )}
                                 </>
-                            )}
-
-                            {!loading && (
-                                <div className="d-flex justify-content-center gap-3 mt-4">
-                                    <AddButton onClick={handleAddClick} />
-                                    <ReturnButton onClick={handleReturnClick} />
-                                </div>
                             )}
                         </div>
                     </div>

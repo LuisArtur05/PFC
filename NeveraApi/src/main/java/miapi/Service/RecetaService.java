@@ -29,6 +29,7 @@ public class RecetaService {
         receta.setTiempo_preparacion(dto.getTiempo_preparacion());
         receta.setDificultad(dto.getDificultad());
         receta.setPrecio(dto.getPrecio()); 
+        receta.setIngredientes(dto.getIngredientes());
 
         return recetaDAO.save(receta);
     }
@@ -45,6 +46,7 @@ public class RecetaService {
         dto.setTiempo_preparacion(receta.getTiempo_preparacion());
         dto.setDificultad(receta.getDificultad());
         dto.setPrecio(receta.getPrecio()); 
+        dto.setIngredientes(receta.getIngredientes());
 
         return dto;
     }
@@ -61,7 +63,8 @@ public class RecetaService {
             dto.setInstrucciones(receta.getInstrucciones());
             dto.setTiempo_preparacion(receta.getTiempo_preparacion());
             dto.setDificultad(receta.getDificultad());
-            dto.setPrecio(receta.getPrecio()); 
+            dto.setPrecio(receta.getPrecio());
+            dto.setIngredientes(receta.getIngredientes());
             return dto;
         }).toList();
     }
@@ -89,6 +92,7 @@ public class RecetaService {
         receta.setTiempo_preparacion(dto.getTiempo_preparacion());
         receta.setDificultad(dto.getDificultad());
         receta.setPrecio(dto.getPrecio());
+        receta.setIngredientes(dto.getIngredientes());
     
         recetaDAO.save(receta);
     
@@ -101,6 +105,7 @@ public class RecetaService {
         updatedDTO.setTiempo_preparacion(receta.getTiempo_preparacion());
         updatedDTO.setDificultad(receta.getDificultad());
         updatedDTO.setPrecio(receta.getPrecio());
+        updatedDTO.setIngredientes(receta.getIngredientes());
     
         return updatedDTO;
     }

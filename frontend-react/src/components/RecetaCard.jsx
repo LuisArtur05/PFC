@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Alert } from "react-bootstrap";
 import "./FoodCard.css";
 
-export default function RecetaCard({ receta, isSelected, onSelect, onGuardar, onEliminar }) {
+export default function RecetaCard({ receta, isSelected, onSelect, onGuardar, onEliminar, onNeveraClick }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({ ...receta });
   const [validationError, setValidationError] = useState(null);
@@ -61,7 +61,6 @@ export default function RecetaCard({ receta, isSelected, onSelect, onGuardar, on
               onChange={handleChange}
               placeholder="Nombre"
             />
-           
             <textarea
               className="form-control"
               name="instrucciones"
@@ -91,6 +90,13 @@ export default function RecetaCard({ receta, isSelected, onSelect, onGuardar, on
               value={editedData.precio}
               onChange={handleChange}
               placeholder="Precio (€)"
+            />
+            <textarea
+              className="form-control"
+              name="ingredientes"
+              value={editedData.ingredientes || ""}
+              onChange={handleChange}
+              placeholder="Ingredientes "
             />
             <div className="d-flex gap-2 justify-content-center mt-2">
               <button
@@ -129,12 +135,20 @@ export default function RecetaCard({ receta, isSelected, onSelect, onGuardar, on
             )}
             {receta.dificultad && (
               <p className="card-text">
-                <strong>Dificultad: </strong>{receta.dificultad}
+                <strong>Dificultad:</strong> {receta.dificultad}
               </p>
             )}
             {receta.precio && (
               <p className="card-text">
                 <strong>Precio:</strong> {receta.precio} €
+              </p>
+            )}
+            {receta.ingredientes && (
+              <p className="card-text">
+                <strong>Ingredientes:</strong>{" "}
+                {Array.isArray(receta.ingredientes)
+                  ? receta.ingredientes.join(", ")
+                  : receta.ingredientes}
               </p>
             )}
             {isSelected && (
@@ -157,6 +171,17 @@ export default function RecetaCard({ receta, isSelected, onSelect, onGuardar, on
                 >
                   Eliminar
                 </button>
+                {onNeveraClick && (
+                  <button
+                    className="btn btn-outline-success btn-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNeveraClick(receta);
+                    }}
+                  >
+                    Guardar en Nevera
+                  </button>
+                )}
               </div>
             )}
           </>
